@@ -16,10 +16,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.PlatformUI;
 
-import com.github.gradusnikov.eclipse.assistai.handlers.Context;
-import com.github.gradusnikov.eclipse.assistai.jobs.SendConversationJob;
-
 import jobs.AssistAIJobConstants;
+import jobs.SendConversationJob;
 import model.ChatMessage;
 import model.Conversation;
 import prompt.ChatMessageFactory;

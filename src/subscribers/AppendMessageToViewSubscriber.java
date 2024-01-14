@@ -10,9 +10,8 @@ import javax.inject.Singleton;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
-import com.github.gradusnikov.eclipse.assistai.model.Incoming;
-
 import model.ChatMessage;
+import model.Incoming;
 import part.ChatGPTPresenter;
 
 @Creatable

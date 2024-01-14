@@ -25,11 +25,11 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.gradusnikov.eclipse.assistai.model.Incoming;
 
 import commands.FunctionExecutorProvider;
 import model.ChatMessage;
 import model.Conversation;
+import model.Incoming;
 import prompt.PromptLoader;
 
 /**

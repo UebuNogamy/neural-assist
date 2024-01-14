@@ -5,7 +5,7 @@ import java.util.concurrent.Flow.Subscription;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 
-import com.github.gradusnikov.eclipse.assistai.model.Incoming;
+import model.Incoming;
 
 @Creatable
 public class PrintMessageSubscriber implements Flow.Subscriber<Incoming>

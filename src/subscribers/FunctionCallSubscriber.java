@@ -10,10 +10,10 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.gradusnikov.eclipse.assistai.model.Incoming;
 
 import jobs.ExecuteFunctionCallJob;
 import model.FunctionCall;
+import model.Incoming;
 
 @Creatable
 public class FunctionCallSubscriber implements Flow.Subscriber<Incoming>

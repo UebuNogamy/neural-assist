@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
-import com.github.gradusnikov.eclipse.assistai.model.Incoming;
+import model.Incoming;
 
 @Creatable
 public class PrintToFileMessageSubscriber implements Flow.Subscriber<Incoming>
