@@ -30,6 +30,7 @@ import commands.FunctionExecutorProvider;
 import model.ChatMessage;
 import model.Conversation;
 import model.Incoming;
+import model.Type;
 import prompt.PromptLoader;
 
 /**
@@ -105,8 +106,8 @@ public class OpenAIStreamJavaHttpClient
                 if ( Objects.nonNull( message.getFunctionCall() ) )
                 {
                     var functionCall = new LinkedHashMap<String, Object> ();
-                    functionCall.put( "name", message.getFunctionCall().name() );
-                    functionCall.put( "arguments", objectMapper.writeValueAsString(  message.getFunctionCall().arguments() ) );
+                    functionCall.put( "name", message.getFunctionCall().getName() );
+                    functionCall.put( "arguments", objectMapper.writeValueAsString(  message.getFunctionCall().getArguments() ) );
                     
                     userMessage.put( "function_call", functionCall );
                 }
@@ -192,7 +193,7 @@ public class OpenAIStreamJavaHttpClient
     							    var content = node.get("content").asText();
     							    if ( !"null".equals( content ) )
     							    {
-    							        publisher.submit(new Incoming(Incoming.Type.CONTENT, content));
+    							        publisher.submit(new Incoming(Type.CONTENT, content));
     							    }
     							}
     							if ( node.has( "function_call" ) )
@@ -200,11 +201,11 @@ public class OpenAIStreamJavaHttpClient
     							    var functionNode = node.get( "function_call" );
     							    if ( functionNode.has( "name" ) )
     							    {
-    							        publisher.submit( new Incoming(Incoming.Type.FUNCTION_CALL, String.format( "\"function_call\" : { \n \"name\": \"%s\",\n \"arguments\" :", functionNode.get("name").asText() ) ) );
+    							        publisher.submit( new Incoming(Type.FUNCTION_CALL, String.format( "\"function_call\" : { \n \"name\": \"%s\",\n \"arguments\" :", functionNode.get("name").asText() ) ) );
     							    }
     							    if ( functionNode.has( "arguments" ) )
     							    {
-    							        publisher.submit( new Incoming(Incoming.Type.FUNCTION_CALL, node.get("function_call").get("arguments").asText()) );
+    							        publisher.submit( new Incoming(Type.FUNCTION_CALL, node.get("function_call").get("arguments").asText()) );
     							    }
     							}
     						}

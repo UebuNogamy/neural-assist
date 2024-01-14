@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jobs.ExecuteFunctionCallJob;
 import model.FunctionCall;
 import model.Incoming;
+import model.Type;
 
 @Creatable
 public class FunctionCallSubscriber implements Flow.Subscriber<Incoming>
@@ -43,9 +44,9 @@ public class FunctionCallSubscriber implements Flow.Subscriber<Incoming>
     @Override
     public void onNext( Incoming item )
     {
-        if ( Incoming.Type.FUNCTION_CALL == item.type() )
+        if ( Type.FUNCTION_CALL == item.getType() )
         {
-            jsonBuffer.append( item.payload() );
+            jsonBuffer.append( item.getPayload() );
         }
         subscription.request(1);
     }

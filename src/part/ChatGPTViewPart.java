@@ -167,16 +167,7 @@ public class ChatGPTViewPart
 
     private void initializeChatView( Browser browser )
     {
-        String htmlTemplate = """
-                <html>
-                    <style>${css}</style>
-                    <script>${js}</script>
-                    <body>
-                            <div id="content">
-                            </div>
-                    </body>
-                </html>
-                """;
+        String htmlTemplate = "<html><style>${css}</style><script>${js}</script><body><div id='content'></div></body></html>";
         
         String js  = loadJavaScripts();
         String css = loadCss();
@@ -271,14 +262,10 @@ public class ChatGPTViewPart
         // 
         String cssClass = "user".equals( role ) ? "chat-bubble me" : "chat-bubble you";
         uiSync.asyncExec(() -> {
-            browser.execute("""
-                    node = document.createElement("div");
-                    node.setAttribute("id", "message-${id}");
-                    node.setAttribute("class", "${cssClass}");
-                    document.getElementById("content").appendChild(node);
-                    	""".replace("${id}", messageId )
-                    	   .replace( "${cssClass}", cssClass )
-                    	);
+            browser.execute("node = document.createElement('div');node.setAttribute('id', 'message-${id}');node.setAttribute('class', '${cssClass}');document.getElementById('content').appendChild(node);"
+            		.replace("${id}", messageId )
+            	   .replace( "${cssClass}", cssClass )
+            	);
             browser.execute(
                     // Scroll down
                     "window.scrollTo(0, document.body.scrollHeight);");

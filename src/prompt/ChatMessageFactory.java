@@ -71,47 +71,47 @@ public class ChatMessageFactory
     private Supplier<String> fixErrorsPromptSupplier( Context context )
     {
         return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.FIX_ERRORS.preferenceName() ), 
-                "${documentText}", context.fileContents(),
-                "${fileName}", context.fileName(),
-                "${lang}", context.lang(),
-                "${errors}", context.selectedContent()
+                "${documentText}", context.getFileContents(),
+                "${fileName}", context.getFileName(),
+                "${lang}", context.getLang(),
+                "${errors}", context.getSelectedContent()
                 );
     }
 
     private Supplier<String> discussCodePromptSupplier( Context context )
     {
         return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.DISCUSS.preferenceName() ), 
-                "${documentText}", context.fileContents(),
-                "${fileName}", context.fileName(),
-                "${lang}", context.lang()
+                "${documentText}", context.getFileContents(),
+                "${fileName}", context.getFileName(),
+                "${lang}", context.getLang()
                 );
     }
 
     private Supplier<String> javaDocPromptSupplier( Context context )
     {
         return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.DOCUMENT.preferenceName() ), 
-                    "${documentText}", context.fileContents(),
-                    "${javaType}", context.selectedItemType(),
-                    "${name}", context.selectedItem(),
-                    "${lang}", context.lang()
+                    "${documentText}", context.getFileContents(),
+                    "${javaType}", context.getSelectedItemType(),
+                    "${name}", context.getSelectedItem(),
+                    "${lang}", context.getLang()
                     );
     }
     private Supplier<String> refactorPromptSupplier( Context context )
     {
         return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.REFACTOR.preferenceName() ), 
-                "${documentText}", context.fileContents(),
-                "${selectedText}", context.selectedContent(),
-                "${fileName}", context.fileName(),
-                "${lang}", context.lang()
+                "${documentText}", context.getFileContents(),
+                "${selectedText}", context.getSelectedContent(),
+                "${fileName}", context.getFileName(),
+                "${lang}", context.getLang()
                 );
     }
     private Supplier<String> unitTestSupplier( Context context )
     {
         return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.TEST_CASE.preferenceName() ), 
-                "${documentText}", context.fileContents(),
-                "${javaType}", context.selectedItemType(),
-                "${name}", context.selectedItem(),
-                "${lang}", context.lang()
+                "${documentText}", context.getFileContents(),
+                "${javaType}", context.getSelectedItemType(),
+                "${name}", context.getSelectedItem(),
+                "${lang}", context.getLang()
                 );
     }
 

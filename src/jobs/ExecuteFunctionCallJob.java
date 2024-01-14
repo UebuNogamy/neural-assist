@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import commands.FunctionExecutorProvider;
+import model.ChatMessage;
 import model.Conversation;
 import model.FunctionCall;
 
@@ -70,14 +71,14 @@ public class ExecuteFunctionCallJob extends Job
     {
         logger.info( "Executing function call: " + functionCall  );
         var functionExecutor = functionExecutorProvider.get();
-        return functionExecutor.call( functionCall.name(), functionCall.arguments() )
+        return functionExecutor.call( functionCall.getName(), functionCall.getArguments() )
         .exceptionally( th -> {
             logger.error( th.getMessage(), th );
             return Status.error( th.getMessage(), th ); 
             })
         .thenApply( result -> {
-            logger.info( "Finished function call " + functionCall.name() );
-            ChatMessage resultMessage = new ChatMessage( UUID.randomUUID().toString(), functionCall.name(), "function" );
+            logger.info( "Finished function call " + functionCall.getName() );
+            ChatMessage resultMessage = new ChatMessage( UUID.randomUUID().toString(), functionCall.getName(), "function" );
             String resultJson;
             try
             {

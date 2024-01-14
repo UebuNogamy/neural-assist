@@ -22,7 +22,7 @@ public class PrintMessageSubscriber implements Flow.Subscriber<Incoming>
     @Override
     public void onNext(Incoming item)
     {
-        System.out.print(item.payload());
+        System.out.print(item.getPayload());
         subscription.request(1);
     }
 
