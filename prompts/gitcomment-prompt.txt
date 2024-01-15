@@ -1,8 +1,7 @@
-Process the Git patch DIFF content [content] and create a meaningful and detailed Git commit comment.
+Обработай содержимое Git patch DIFF [content] и создай содержательный и подробный комментарий к Git комиту.
 
-Follow these guidelines:
-1. The length of the line of the Git commit comment cannot be longer than 72 characters
-2. Return commit comment as a code block type `txt`.
- 
+Следуй этим рекомендациям:
+1. Длина строки комментария к Git комиту не может превышать 72 символа.
+2. Верни комментарий к комиту в виде блока кода типа `txt`. 
 
 [content]=${content}

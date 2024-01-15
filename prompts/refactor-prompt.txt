@@ -1,20 +1,20 @@
-In the context of the source code [class] provide refactored version of the code snippet [snippet].
+В контексте исходного кода [class] предоставь переработанную версию фрагмента кода [snippet].
 
-If the code does not require refactoring - respond with the message "The code does not require refactoring". 
+Если код не требует рефакторинга - ответь сообщением "Код не требует рефакторинга".
 
-Keep explanation concise and compact.
+Объяснение должно быть кратким и компактным.
 
-Don't print the content of the whole class. Just the modified snippet code, and the referenced methods.
+Не печатай содержимое всего класса. Только измененный фрагмент кода и методы, которые в нем используются.
 
-Return the response in the following markdown format:
+Ответ должын быть в формате markdown и соответствовать шаблону:
 
-<your refactoring explanation and reasoning>
+<твое объяснение и рассуждения по рефакторингу>
 
-```<language>
-<your source code>
+```<Язык программирования>
+<Твой код>
 ```
 
-Let's work this out in a step by step way to be sure we have the right answer.
+Давай разберемся с этим шаг за шагом, чтобы быть уверенными, что у нас есть правильный ответ.
 
 [snippet]=
 ```${lang}
@@ -26,6 +26,3 @@ ${selectedText}
 ```${lang}
 ${documentText}
 ```
-
-
-

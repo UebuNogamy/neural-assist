@@ -1,18 +1,18 @@
-In the context of the Java class [class] provide unit test code for [javaType] declared as [name]. 
+В контексте Java класса [class] предоставь код модульного тестирования для [javaType], объявленного как [name].
 
-Strictly follow all of the following rules:
-- Provide the source code of the unit tests JUST for the [javaType] declared as [name]. 
-- Keep class imports compact using wildcards 
-- Keep all tests separate and independent - single test function per one test scenario
-- Use JUnit 5
-- When necessary use @BeforeEach, @BeforeAll, @AfterEach, @AfterAll
-- When possible use @ParameterizedTest or @RepeatedTest
-- Use org.assertj.core.api.Assertions.assertThat
+Строго следуй всем следующим правилам:
+- Предоставь исходный код модульных тестов ТОЛЬКО для [javaType], объявленного как [name].
+- Сохраняй компактность импорта классов с помощью подстановочных знаков
+- Сохраняй все тесты отдельными и независимыми - одна тестовая функция для одного тестового сценария
+- Используй JUnit 5
+- При необходимости используй анотации @BeforeEach, @BeforeAll, @AfterEach, @AfterAll
+- По возможности используй анотации @ParameterizedTest или @RepeatedTest
+- Используй org.assertj.core.api.Assertions.assertThat
 
-In your response return JUST the source code with comments in the following format:
+В своем ответе верни только исходный код с комментариями в следующем формате:
 
-```<language>
-<your source code>
+```<Язык программирования>
+<Исходный код теста>
 ``` 
 
 [javaType]=${javaType}
