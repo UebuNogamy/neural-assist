@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.egit.core.Activator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,15 +70,15 @@ public class ExecuteFunctionCallJob extends Job
     }
     private CompletableFuture<IStatus> executeFunctionCall( FunctionCall functionCall )
     {
-        logger.info( "Executing function call: " + functionCall  );
+    	logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Executing function call: " + functionCall));
         var functionExecutor = functionExecutorProvider.get();
         return functionExecutor.call( functionCall.getName(), functionCall.getArguments() )
         .exceptionally( th -> {
-            logger.error( th.getMessage(), th );
+            logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, th.getMessage(), th));
             return Status.error( th.getMessage(), th ); 
             })
         .thenApply( result -> {
-            logger.info( "Finished function call " + functionCall.getName() );
+            logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Finished function call: " + functionCall));
             ChatMessage resultMessage = new ChatMessage( UUID.randomUUID().toString(), functionCall.getName(), "function" );
             String resultJson;
             try
@@ -98,7 +99,7 @@ public class ExecuteFunctionCallJob extends Job
             }
             catch ( JsonProcessingException e )
             {
-                logger.error( e.getMessage(), e );
+            	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
                 return Status.error( e.getMessage(), e ); 
             }
         } );

@@ -7,7 +7,10 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.egit.core.Activator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -81,7 +84,7 @@ public class FunctionCallSubscriber implements Flow.Subscriber<Incoming>
         }
         catch ( Exception e )
         {
-            logger.error( e.getMessage(), e );
+        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
         }
         subscription.request(1);
     }

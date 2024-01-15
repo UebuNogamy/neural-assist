@@ -10,8 +10,11 @@ import javax.inject.Named;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -60,7 +63,7 @@ public class AssistAiGenerateGitCommentHandler
                 if ( Objects.isNull( head ) )
                 {
                     // TODO: Handle the initial commit scenario
-                    logger.info( "Initial commit: No previous commits found." );
+                    logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Initial commit: No previous commits found."));
                 }
                 else
                 {
@@ -78,7 +81,7 @@ public class AssistAiGenerateGitCommentHandler
         }
         catch ( Exception e )
         {
-            logger.error( e.getMessage(), e );
+        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
         }
     }
 

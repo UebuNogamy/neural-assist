@@ -21,7 +21,10 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.egit.core.Activator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -159,7 +162,7 @@ public class OpenAIStreamJavaHttpClient
     				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
     				.build();
     		
-    		logger.info("Sending request to ChatGPT.\n\n" + requestBody);
+    		logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Sending request to ChatGPT.\n\n" + requestBody));
     		
     		try
     		{
@@ -167,7 +170,7 @@ public class OpenAIStreamJavaHttpClient
     			
     			if (response.statusCode() != 200)
     			{
-    			    logger.error("Request failed with status code: " + response.statusCode() + " and response body: " + response.body());
+    			    logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Request failed with status code: " + response.statusCode() + " and response body: " + response.body()));
     			}
     			try (var inputStream = response.body();
     			     var inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
@@ -219,7 +222,7 @@ public class OpenAIStreamJavaHttpClient
     		}
     		catch (Exception e)
     		{
-    		    logger.error( e.getMessage(), e );
+    			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
     			publisher.closeExceptionally(e);
     		} 
     		finally

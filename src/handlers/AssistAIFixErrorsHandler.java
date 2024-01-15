@@ -14,8 +14,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.egit.core.Activator;
 import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.swt.widgets.Shell;
@@ -104,7 +107,7 @@ public class AssistAIFixErrorsHandler
             }
             catch ( CoreException e )
             {
-                logger.error( e.getMessage(), e );
+            	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
             }
         }
         if ( !errorMessages.isEmpty() )

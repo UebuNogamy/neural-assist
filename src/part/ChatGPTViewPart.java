@@ -10,8 +10,11 @@ import javax.inject.Inject;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.egit.core.Activator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
@@ -111,7 +114,7 @@ public class ChatGPTViewPart
         }
         catch ( Exception e )
         {
-            logger.error( e.getMessage(), e );
+        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
         }
         clearButton.addSelectionListener(new SelectionAdapter() {
             @Override

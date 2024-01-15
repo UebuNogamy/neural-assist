@@ -13,7 +13,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.egit.core.Activator;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -135,7 +138,7 @@ public class ReadJavaDocCommand
         }
         catch ( JavaModelException e )
         {
-          logger.error( e.getMessage(), e );
+        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
         }
         
         var converter = FlexmarkHtmlConverter.builder().build();
@@ -223,7 +226,7 @@ public class ReadJavaDocCommand
         }
         catch ( Exception e )
         {
-            logger.error( e.getMessage(), e );
+        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
             return null;
         }
         return null;

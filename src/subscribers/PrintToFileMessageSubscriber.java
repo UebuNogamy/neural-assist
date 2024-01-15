@@ -11,7 +11,10 @@ import java.util.concurrent.Flow.Subscription;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.egit.core.Activator;
 
 import model.Incoming;
 
@@ -37,14 +40,14 @@ public class PrintToFileMessageSubscriber implements Flow.Subscriber<Incoming>
         }
         catch ( IOException e )
         {
-            logger.error( e.getMessage(), e );
+        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
         }
 
     }
     @Override
     public void onSubscribe(Subscription subscription)
     {
-        logger.info( "Opening a log file: " + getFile() );        
+        logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Opening a log file: " + getFile()));
         this.subscription = subscription;
         write( "\n>--- BEGIN MESSAGE ---\n" );
         subscription.request(1);

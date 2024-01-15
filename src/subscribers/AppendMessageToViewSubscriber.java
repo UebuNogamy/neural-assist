@@ -8,7 +8,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.egit.core.Activator;
 
 import model.ChatMessage;
 import model.Incoming;
@@ -59,7 +62,7 @@ public class AppendMessageToViewSubscriber implements Flow.Subscriber<Incoming>
     public void onError(Throwable throwable)
     {
         message = null;
-        logger.error(throwable.getMessage(), throwable);
+        logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, throwable.getMessage(), throwable));
     }
 
     @Override
