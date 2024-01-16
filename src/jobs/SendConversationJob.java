@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.egit.core.Activator;
 
 import model.Conversation;
 import subscribers.OpenAIHttpClientProvider;
@@ -41,12 +42,12 @@ public class SendConversationJob extends Job
         {
             var future = CompletableFuture.runAsync( openAIClient.run(conversation) )
                     .thenApply( v -> Status.OK_STATUS )
-                    .exceptionally( e -> Status.error("Unable to run the task: " + e.getMessage(), e) );
+                    .exceptionally(e -> new Status(IStatus.ERROR, Activator.getPluginId(), "Unable to run the task: " + e.getMessage(), e));
             return future.get();
         } 
         catch ( Exception e ) 
         {
-            return Status.error( e.getMessage(), e );
+            return new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e);
         }
     }
 }

@@ -162,7 +162,7 @@ public class OpenAIStreamJavaHttpClient
     				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
     				.build();
     		
-    		logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Sending request to ChatGPT.\n\n" + requestBody));
+    		logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Sending request to ChatGPT.\n\n" + requestBody));
     		
     		try
     		{
@@ -170,7 +170,7 @@ public class OpenAIStreamJavaHttpClient
     			
     			if (response.statusCode() != 200)
     			{
-    			    logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Request failed with status code: " + response.statusCode() + " and response body: " + response.body()));
+    			    logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), "Request failed with status code: " + response.statusCode() + " and response body: " + response.body()));
     			}
     			try (var inputStream = response.body();
     			     var inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
@@ -222,7 +222,7 @@ public class OpenAIStreamJavaHttpClient
     		}
     		catch (Exception e)
     		{
-    			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+    			logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
     			publisher.closeExceptionally(e);
     		} 
     		finally

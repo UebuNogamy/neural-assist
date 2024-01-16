@@ -31,11 +31,11 @@ public class PartAccessor
     public Optional<ChatGPTViewPart> findMessageView() 
     {
         // Find the MessageView by element ID in the application model
-        return modelService.findElements(application, "assistai.partdescriptor.chatgptview", MPart.class)
-                                           .stream()
-                                           .findFirst()
-                                           .map( mpart -> mpart.getObject() )
-                                           .map( ChatGPTViewPart.class::cast );
+    	return modelService.findElements(application, MPart.class, EModelService.IN_ACTIVE_PERSPECTIVE, element -> element.getElementId().equalsIgnoreCase("neural-assist.partdescriptor.chatgptview"))
+	    	.stream()
+	        .findFirst()
+	        .map( mpart -> mpart.getObject() )
+	        .map( ChatGPTViewPart.class::cast );
     }
 
     

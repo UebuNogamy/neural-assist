@@ -107,7 +107,7 @@ public class AssistAIFixErrorsHandler
             }
             catch ( CoreException e )
             {
-            	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+            	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
             }
         }
         if ( !errorMessages.isEmpty() )

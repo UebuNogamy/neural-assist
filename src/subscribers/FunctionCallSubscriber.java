@@ -84,7 +84,7 @@ public class FunctionCallSubscriber implements Flow.Subscriber<Incoming>
         }
         catch ( Exception e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
         }
         subscription.request(1);
     }

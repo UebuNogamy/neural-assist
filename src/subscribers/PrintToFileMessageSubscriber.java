@@ -40,14 +40,14 @@ public class PrintToFileMessageSubscriber implements Flow.Subscriber<Incoming>
         }
         catch ( IOException e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
         }
 
     }
     @Override
     public void onSubscribe(Subscription subscription)
     {
-        logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Opening a log file: " + getFile()));
+        logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Opening a log file: " + getFile()));
         this.subscription = subscription;
         write( "\n>--- BEGIN MESSAGE ---\n" );
         subscription.request(1);

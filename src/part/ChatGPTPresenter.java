@@ -74,7 +74,7 @@ public class ChatGPTPresenter
 
     public void onSendUserMessage( String text )
     {
-        logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Send user message"));
+        logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Send user message"));
         ChatMessage message = chatMessageFactory.createUserChatMessage( () -> text );
         conversation.add( message );
         partAccessor.findMessageView().ifPresent( part -> { 

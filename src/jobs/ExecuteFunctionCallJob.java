@@ -60,7 +60,7 @@ public class ExecuteFunctionCallJob extends Job
         }
         catch ( InterruptedException | ExecutionException e )
         {
-            return Status.error( e.getMessage(), e );
+            return new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e);
         }
     }
 
@@ -70,15 +70,16 @@ public class ExecuteFunctionCallJob extends Job
     }
     private CompletableFuture<IStatus> executeFunctionCall( FunctionCall functionCall )
     {
-    	logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Executing function call: " + functionCall));
+    	logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Executing function call: " + functionCall));
         var functionExecutor = functionExecutorProvider.get();
         return functionExecutor.call( functionCall.getName(), functionCall.getArguments() )
         .exceptionally( th -> {
-            logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, th.getMessage(), th));
-            return Status.error( th.getMessage(), th ); 
+            Status status = new Status(IStatus.ERROR, Activator.getPluginId(), th.getMessage(), th);
+        	logger.log(status);
+            return status; 
             })
         .thenApply( result -> {
-            logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Finished function call: " + functionCall));
+            logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Finished function call: " + functionCall));
             ChatMessage resultMessage = new ChatMessage( UUID.randomUUID().toString(), functionCall.getName(), "function" );
             String resultJson;
             try
@@ -99,8 +100,9 @@ public class ExecuteFunctionCallJob extends Job
             }
             catch ( JsonProcessingException e )
             {
-            	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
-                return Status.error( e.getMessage(), e ); 
+            	Status status = new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e);
+            	logger.log(status);
+                return status; 
             }
         } );
     }

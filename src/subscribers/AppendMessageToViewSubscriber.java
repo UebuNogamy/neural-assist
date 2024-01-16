@@ -62,7 +62,7 @@ public class AppendMessageToViewSubscriber implements Flow.Subscriber<Incoming>
     public void onError(Throwable throwable)
     {
         message = null;
-        logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, throwable.getMessage(), throwable));
+        logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), throwable.getMessage(), throwable));
     }
 
     @Override

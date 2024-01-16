@@ -114,7 +114,7 @@ public class ChatGPTViewPart
         }
         catch ( Exception e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
         }
         clearButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -156,7 +156,7 @@ public class ChatGPTViewPart
 
     private Browser createChatView( Composite parent )
     {
-        Browser browser = new Browser( parent, SWT.EDGE);
+        Browser browser = new Browser( parent, SWT.WEBKIT);
         initializeChatView( browser );
         initializeFunctions( browser );
         return browser;

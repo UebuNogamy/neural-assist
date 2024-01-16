@@ -138,7 +138,7 @@ public class ReadJavaDocCommand
         }
         catch ( JavaModelException e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
         }
         
         var converter = FlexmarkHtmlConverter.builder().build();
@@ -226,7 +226,7 @@ public class ReadJavaDocCommand
         }
         catch ( Exception e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
             return null;
         }
         return null;

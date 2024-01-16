@@ -63,7 +63,7 @@ public class AssistAiGenerateGitCommentHandler
                 if ( Objects.isNull( head ) )
                 {
                     // TODO: Handle the initial commit scenario
-                    logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "Initial commit: No previous commits found."));
+                    logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Initial commit: No previous commits found."));
                 }
                 else
                 {
@@ -81,7 +81,7 @@ public class AssistAiGenerateGitCommentHandler
         }
         catch ( Exception e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
         }
     }
 

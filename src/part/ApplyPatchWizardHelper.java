@@ -59,7 +59,7 @@ public class ApplyPatchWizardHelper
         } 
         catch (Exception e) 
         {
-            logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage(), e));
+            logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getLocalizedMessage(), e));
         }
     }
     
