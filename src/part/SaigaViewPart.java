@@ -35,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
 import prompt.PromptParser;
 
 
-public class ChatGPTViewPart
+public class SaigaViewPart
 {
 
     private Browser browser;
@@ -51,7 +51,7 @@ public class ChatGPTViewPart
     
     private Text inputArea;
 
-    public ChatGPTViewPart()
+    public SaigaViewPart()
     {
     }
 

@@ -65,7 +65,7 @@ public class SaigaPresenter
     {
         onStop();
         conversation.clear();
-        partAccessor.findMessageView().ifPresent( ChatGPTViewPart::clearChatView );
+        partAccessor.findMessageView().ifPresent( SaigaViewPart::clearChatView );
     }
     public void on( String text )
     {

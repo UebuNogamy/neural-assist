@@ -9,14 +9,14 @@
    </extension>
    <extension point="org.eclipse.ui.preferencePages">      
       <page
-            class="preferences.OpenAIPreferencePage"
-            id="preferences.OpenAIPreferencePage"
+            class="preferences.PreferencePage"
+            id="preferences.PreferencePage"
             name="NeuralAsist">
       </page>
         <page
             id="preferences.PromptsPreferencePage"
             name="Prompts"
-            category="preferences.OpenAIPreferencePage"
+            category="preferences.PreferencePage"
             class="preferences.PromptsPreferencePage">
         </page>      
    </extension>
