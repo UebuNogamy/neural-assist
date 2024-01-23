@@ -19,7 +19,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.PlatformUI;
 
-import jobs.AssistAIJobConstants;
+import jobs.NeuralAssistJobConstants;
 import jobs.SendConversationJob;
 import model.ChatMessage;
 import model.Conversation;
@@ -29,7 +29,7 @@ import subscribers.AppendMessageToViewSubscriber;
 
 @Creatable
 @Singleton
-public class ChatGPTPresenter
+public class SaigaPresenter
 {
     @Inject
     private ILog logger;
@@ -119,7 +119,7 @@ public class ChatGPTPresenter
     {
         var jobs = jobManager.find( null );
         Arrays.stream( jobs )
-              .filter( job -> job.getName().startsWith( AssistAIJobConstants.JOB_PREFIX ) )
+              .filter( job -> job.getName().startsWith( NeuralAssistJobConstants.JOB_PREFIX ) )
               .forEach( Job::cancel );
         
         partAccessor.findMessageView().ifPresent(messageView -> {

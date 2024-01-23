@@ -28,19 +28,19 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import part.ChatGPTPresenter;
+import part.SaigaPresenter;
 import prompt.ChatMessageFactory;
 import prompt.Prompts;
 
 @SuppressWarnings( "restriction" )
-public class AssistAiGenerateGitCommentHandler
+public class NeuralAssistGenerateGitCommentHandler
 {
     @Inject
     private ILog logger;
     @Inject
     private ChatMessageFactory chatMessageFactory;
     @Inject
-    private ChatGPTPresenter viewPresenter;
+    private SaigaPresenter viewPresenter;
 
     @Execute
     public void execute( @Named( IServiceConstants.ACTIVE_SHELL ) Shell s )

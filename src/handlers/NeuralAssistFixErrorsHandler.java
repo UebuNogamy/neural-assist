@@ -25,18 +25,18 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import part.ChatGPTPresenter;
+import part.SaigaPresenter;
 import prompt.ChatMessageFactory;
 import prompt.Prompts;
 
-public class AssistAIFixErrorsHandler
+public class NeuralAssistFixErrorsHandler
 {
     @Inject
     private ILog logger;
     @Inject
     private ChatMessageFactory chatMessageFactory;
     @Inject
-    private ChatGPTPresenter viewPresenter;
+    private SaigaPresenter viewPresenter;
     
     @Execute
     public void execute( @Named( IServiceConstants.ACTIVE_SHELL ) Shell s )

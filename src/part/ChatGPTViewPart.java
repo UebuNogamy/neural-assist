@@ -47,7 +47,7 @@ public class ChatGPTViewPart
     private ILog logger;
     
     @Inject
-    private ChatGPTPresenter presenter;
+    private SaigaPresenter presenter;
     
     private Text inputArea;
 

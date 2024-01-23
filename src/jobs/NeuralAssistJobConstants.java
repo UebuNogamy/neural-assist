@@ -1,6 +1,6 @@
 package jobs;
 
-public interface AssistAIJobConstants
+public interface NeuralAssistJobConstants
 {
     public static final String JOB_PREFIX = "AssistAI: ";
 }

@@ -43,7 +43,7 @@ public class ExecuteFunctionCallJob extends Job
     
     public ExecuteFunctionCallJob()
     {
-        super( AssistAIJobConstants.JOB_PREFIX + " execute function call");
+        super( NeuralAssistJobConstants.JOB_PREFIX + " execute function call");
         
     }
     

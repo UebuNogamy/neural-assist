@@ -19,20 +19,20 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import part.ChatGPTPresenter;
+import part.SaigaPresenter;
 import prompt.ChatMessageFactory;
 import prompt.Prompts;
 
-public class AssistAIHandlerTemplate 
+public class NeuralAssistHandlerTemplate 
 {
     @Inject
     protected ChatMessageFactory chatMessageFactory;
     @Inject
-    protected ChatGPTPresenter viewPresenter;
+    protected SaigaPresenter viewPresenter;
     
     protected final Prompts type;
     
-    public AssistAIHandlerTemplate( Prompts type )
+    public NeuralAssistHandlerTemplate( Prompts type )
     {
         this.type = type;
     }

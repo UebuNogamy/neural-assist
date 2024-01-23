@@ -15,7 +15,7 @@ import org.eclipse.egit.core.Activator;
 
 import model.ChatMessage;
 import model.Incoming;
-import part.ChatGPTPresenter;
+import part.SaigaPresenter;
 
 @Creatable
 @Singleton
@@ -27,13 +27,13 @@ public class AppendMessageToViewSubscriber implements Flow.Subscriber<Incoming>
     private Flow.Subscription subscription;
     
     private ChatMessage message;
-    private ChatGPTPresenter presenter;
+    private SaigaPresenter presenter;
     
     public AppendMessageToViewSubscriber( )
     {
     }
     
-    public void setPresenter(ChatGPTPresenter presenter)
+    public void setPresenter(SaigaPresenter presenter)
     {
         this.presenter = presenter;
     }
