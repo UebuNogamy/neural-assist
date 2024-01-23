@@ -5,11 +5,11 @@ package preferences;
  */
 public class PreferenceConstants
 {
-    public static final String OPENAI_API_BASE      = "OpenAIAPIBase";
-    public static final String OPENAI_API_END_POINT = "OpenAIAPIEndPoint";
-    public static final String OPENAI_API_KEY       = "OpenAIAPIKey";
-    public static final String OPENAI_MODEL_NAME    = "OpenAIModelName";
-    public static final String OPENAI_CONNECTION_TIMEOUT_SECONDS = "OpenAIConnectionTimeoutSeconds";
-    public static final String OPENAI_REQUEST_TIMEOUT_SECONDS = "OpenAIRequestTimeoutSeconds";
+    public static final String API_BASE      = "APIBase";
+    public static final String API_END_POINT = "APIEndPoint";
+//    public static final String API_KEY       = "APIKey";
+//    public static final String MODEL_NAME    = "ModelName";
+    public static final String CONNECTION_TIMEOUT_SECONDS = "ConnectionTimeoutSeconds";
+    public static final String REQUEST_TIMEOUT_SECONDS = "RequestTimeoutSeconds";
     
 }

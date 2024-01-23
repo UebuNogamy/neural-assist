@@ -8,13 +8,13 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import activator.Activator;
 
 
-public class OpenAIPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
+public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
-    public OpenAIPreferencePage()
+    public PreferencePage()
     {
         super( GRID );
         setPreferenceStore( Activator.getDefault().getPreferenceStore() );
-        setDescription( "OpenAI API settings" );
+        setDescription( "API settings" );
     }
 
     /**
@@ -24,10 +24,10 @@ public class OpenAIPreferencePage extends FieldEditorPreferencePage implements I
      */
     public void createFieldEditors()
     {
-        addField(new StringFieldEditor(PreferenceConstants.OPENAI_API_BASE, "&Open AI API Base:", getFieldEditorParent()));
-        addField(new StringFieldEditor(PreferenceConstants.OPENAI_API_END_POINT, "&Open AI API End Point:", getFieldEditorParent()));
-        addField( new StringFieldEditor( PreferenceConstants.OPENAI_API_KEY, "&Open AI API Key:", getFieldEditorParent() ) );
-        addField( new StringFieldEditor( PreferenceConstants.OPENAI_MODEL_NAME, "&Model Name", getFieldEditorParent() ) );
+        addField(new StringFieldEditor(PreferenceConstants.API_BASE, "&API Base:", getFieldEditorParent()));
+        addField(new StringFieldEditor(PreferenceConstants.API_END_POINT, "&API End Point:", getFieldEditorParent()));
+//        addField( new StringFieldEditor( PreferenceConstants.API_KEY, "&API Key:", getFieldEditorParent() ) );
+//        addField( new StringFieldEditor( PreferenceConstants.MODEL_NAME, "&Model Name", getFieldEditorParent() ) );
     }
 
     /*

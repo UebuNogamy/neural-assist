@@ -18,7 +18,7 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 @Singleton
 public class PromptLoader 
 {
-	private final String BASE_URL = "platform:/plugin/com.github.gradusnikov.eclipse.plugin.assistai.main/prompts/" ; 
+	private final String BASE_URL = "platform:/plugin/ru.sng.asu.katp.neural-asist/prompts/"; 
 	
 	private String baseURL = BASE_URL;
 	

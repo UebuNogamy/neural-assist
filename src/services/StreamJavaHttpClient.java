@@ -41,13 +41,11 @@ import prompt.PromptLoader;
  * This class allows subscribing to responses received from the OpenAI API and processes the chat completions.
  */
 @Creatable
-public class OpenAIStreamJavaHttpClient
+public class StreamJavaHttpClient
 {
     private SubmissionPublisher<Incoming> publisher;
     
     private Supplier<Boolean> isCancelled = () -> false;
-    
-    
     
     @Inject
     private ILog logger;
@@ -56,12 +54,12 @@ public class OpenAIStreamJavaHttpClient
     private PromptLoader promptLoader;
     
     @Inject
-    private OpenAIClientConfiguration configuration;
+    private ClientConfiguration configuration;
     
     @Inject
     private FunctionExecutorProvider functionExecutor;
     
-    public OpenAIStreamJavaHttpClient()
+    public StreamJavaHttpClient()
     {
         publisher = new SubmissionPublisher<>();
 
@@ -120,10 +118,10 @@ public class OpenAIStreamJavaHttpClient
                 }
                 messages.add(userMessage);
             }
-            requestBody.put("model", configuration.getModelName() );
+//            requestBody.put("model", configuration.getModelName());
             requestBody.put("functions", AnnotationToJsonConverter.convertDeclaredFunctionsToJson( functionExecutor.get().getFunctions() ) );
             requestBody.put("messages", messages);
-            requestBody.put("temperature", 0.7);
+            requestBody.put("temperature", 0.1);
             requestBody.put("stream", true);
     
             String jsonString;
@@ -156,7 +154,7 @@ public class OpenAIStreamJavaHttpClient
     		String requestBody = getRequestBody(prompt);
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(configuration.getApiUrl()))
                     .timeout( Duration.ofSeconds( configuration.getRequestTimoutSeconds() ) )
-    				.header("Authorization", "Bearer " + configuration.getApiKey())
+//    				.header("Authorization", "Bearer " + configuration.getApiKey())
     				.header("Accept", "text/event-stream")
     				.header("Content-Type", "application/json")
     				.POST(HttpRequest.BodyPublishers.ofString(requestBody))

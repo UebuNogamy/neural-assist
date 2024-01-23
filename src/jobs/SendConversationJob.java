@@ -13,7 +13,7 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.egit.core.Activator;
 
 import model.Conversation;
-import subscribers.OpenAIHttpClientProvider;
+import subscribers.HttpClientProvider;
 
 @Creatable
 public class SendConversationJob extends Job
@@ -22,7 +22,7 @@ public class SendConversationJob extends Job
     private ILog logger;
     
     @Inject
-    private OpenAIHttpClientProvider clientProvider;
+    private HttpClientProvider clientProvider;
     
     @Inject
     private Conversation conversation;
@@ -35,12 +35,12 @@ public class SendConversationJob extends Job
     @Override
     protected IStatus run(IProgressMonitor progressMonitor) 
     {
-        var openAIClient = clientProvider.get();
-        openAIClient.setCancelProvider( () -> progressMonitor.isCanceled() ); 
+        var client = clientProvider.get();
+        client.setCancelProvider( () -> progressMonitor.isCanceled() ); 
         
         try 
         {
-            var future = CompletableFuture.runAsync( openAIClient.run(conversation) )
+            var future = CompletableFuture.runAsync( client.run(conversation) )
                     .thenApply( v -> Status.OK_STATUS )
                     .exceptionally(e -> new Status(IStatus.ERROR, Activator.getPluginId(), "Unable to run the task: " + e.getMessage(), e));
             return future.get();
