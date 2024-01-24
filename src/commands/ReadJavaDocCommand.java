@@ -12,10 +12,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -42,7 +40,7 @@ import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 public class ReadJavaDocCommand
 {
     @Inject
-    private ILog logger;
+    private Logger logger;
     
     /**
      * Retrieves the attached JavaDoc documentation for a given class within the available Java projects.
@@ -138,7 +136,7 @@ public class ReadJavaDocCommand
         }
         catch ( JavaModelException e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
+        	logger.error(e, e.getMessage());
         }
         
         var converter = FlexmarkHtmlConverter.builder().build();
@@ -226,7 +224,7 @@ public class ReadJavaDocCommand
         }
         catch ( Exception e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
+        	logger.error(e, e.getMessage());
             return null;
         }
         return null;

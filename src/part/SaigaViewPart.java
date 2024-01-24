@@ -9,9 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.egit.core.Activator;
@@ -44,7 +42,7 @@ public class SaigaViewPart
     private UISynchronize uiSync;
     
     @Inject
-    private ILog logger;
+    private Logger logger;
     
     @Inject
     private SaigaPresenter presenter;
@@ -114,7 +112,7 @@ public class SaigaViewPart
         }
         catch ( Exception e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
+        	logger.error(e, e.getMessage());
         }
         clearButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -191,7 +189,7 @@ public class SaigaViewPart
         String[] cssFiles = {"textview.css", "dark.min.css"};
         for ( String file : cssFiles )
         {
-            try ( InputStream in = FileLocator.toFileURL( new URL("platform:/plugin/com.github.gradusnikov.eclipse.plugin.assistai.main/css/" + file) ).openStream() )
+            try ( InputStream in = FileLocator.toFileURL( new URL("platform:/plugin/ru.sng.asu.katp.neural-asist/css/" + file) ).openStream() )
             {
                 css.append( new String(in.readAllBytes(), StandardCharsets.UTF_8) );
                 css.append("\n");
@@ -214,7 +212,7 @@ public class SaigaViewPart
         StringBuilder js = new StringBuilder();
         for ( String file : jsFiles )
         {
-            try ( InputStream in = FileLocator.toFileURL( new URL("platform:/plugin/com.github.gradusnikov.eclipse.plugin.assistai.main/js/" + file) ).openStream() )
+            try ( InputStream in = FileLocator.toFileURL( new URL("platform:/plugin/ru.sng.asu.katp.neural-asist/js/" + file) ).openStream() )
             {
                 js.append( new String(in.readAllBytes(), StandardCharsets.UTF_8) );
                 js.append("\n");

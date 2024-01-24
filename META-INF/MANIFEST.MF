@@ -24,7 +24,8 @@ Require-Bundle: org.eclipse.e4.ui.services,
  org.eclipse.egit.core,
  org.eclipse.compare,
  org.eclipse.e4.ui.dialogs,
- org.eclipse.ui.editors
+ org.eclipse.ui.editors,
+ org.eclipse.e4.core.services;bundle-version="2.1.200"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: neural-assist
 Bundle-Classpath: .

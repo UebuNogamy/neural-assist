@@ -20,10 +20,8 @@ import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,7 +46,7 @@ public class StreamJavaHttpClient
     private Supplier<Boolean> isCancelled = () -> false;
     
     @Inject
-    private ILog logger;
+    private Logger logger;
     
     @Inject
     private PromptLoader promptLoader;
@@ -160,7 +158,7 @@ public class StreamJavaHttpClient
     				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
     				.build();
     		
-    		logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Sending request to ChatGPT.\n\n" + requestBody));
+    		logger.info("Sending request to ChatGPT.\n\n" + requestBody);
     		
     		try
     		{
@@ -168,7 +166,7 @@ public class StreamJavaHttpClient
     			
     			if (response.statusCode() != 200)
     			{
-    			    logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), "Request failed with status code: " + response.statusCode() + " and response body: " + response.body()));
+    			    logger.error("Request failed with status code: " + response.statusCode() + " and response body: " + response.body());
     			}
     			try (var inputStream = response.body();
     			     var inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
@@ -220,7 +218,7 @@ public class StreamJavaHttpClient
     		}
     		catch (Exception e)
     		{
-    			logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
+    			logger.error(e, e.getMessage());
     			publisher.closeExceptionally(e);
     		} 
     		finally

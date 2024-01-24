@@ -9,10 +9,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.project.RepositoryMapping;
@@ -36,7 +34,7 @@ import prompt.Prompts;
 public class NeuralAssistGenerateGitCommentHandler
 {
     @Inject
-    private ILog logger;
+    private Logger logger;
     @Inject
     private ChatMessageFactory chatMessageFactory;
     @Inject
@@ -63,7 +61,7 @@ public class NeuralAssistGenerateGitCommentHandler
                 if ( Objects.isNull( head ) )
                 {
                     // TODO: Handle the initial commit scenario
-                    logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Initial commit: No previous commits found."));
+                    logger.info("Initial commit: No previous commits found.");
                 }
                 else
                 {
@@ -81,7 +79,7 @@ public class NeuralAssistGenerateGitCommentHandler
         }
         catch ( Exception e )
         {
-        	logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e));
+        	logger.error(e, e.getMessage());
         }
     }
 

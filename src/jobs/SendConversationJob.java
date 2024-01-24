@@ -4,12 +4,12 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
 
 import model.Conversation;
@@ -19,7 +19,7 @@ import subscribers.HttpClientProvider;
 public class SendConversationJob extends Job
 {
     @Inject
-    private ILog logger;
+    private Logger logger;
     
     @Inject
     private HttpClientProvider clientProvider;

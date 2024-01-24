@@ -8,12 +8,12 @@ import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,7 +28,7 @@ import model.FunctionCall;
 public class ExecuteFunctionCallJob extends Job
 {
     @Inject
-    private ILog logger;
+    private Logger logger;
 
     @Inject
     private Provider<SendConversationJob> sendConversationJobProvider;
@@ -70,16 +70,16 @@ public class ExecuteFunctionCallJob extends Job
     }
     private CompletableFuture<IStatus> executeFunctionCall( FunctionCall functionCall )
     {
-    	logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Executing function call: " + functionCall));
+    	logger.info("Executing function call: " + functionCall);
         var functionExecutor = functionExecutorProvider.get();
         return functionExecutor.call( functionCall.getName(), functionCall.getArguments() )
         .exceptionally( th -> {
             Status status = new Status(IStatus.ERROR, Activator.getPluginId(), th.getMessage(), th);
-        	logger.log(status);
+        	logger.error(th, th.getMessage());
             return status; 
             })
         .thenApply( result -> {
-            logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Finished function call: " + functionCall));
+            logger.info("Finished function call: " + functionCall);
             ChatMessage resultMessage = new ChatMessage( UUID.randomUUID().toString(), functionCall.getName(), "function" );
             String resultJson;
             try
@@ -101,7 +101,7 @@ public class ExecuteFunctionCallJob extends Job
             catch ( JsonProcessingException e )
             {
             	Status status = new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e);
-            	logger.log(status);
+            	logger.error(e, e.getMessage());
                 return status; 
             }
         } );

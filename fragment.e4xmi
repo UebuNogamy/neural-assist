@@ -11,18 +11,18 @@
     <elements xsi:type="commands:Command" xmi:id="_Y1hcQPPsEe2JjYfRC0o-vw" elementId="command.5" commandName="Git Comment" description="Asks Saiga to generate a meaningful git commit comment "/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_fW12kIrOEeW7h_qdP9N9fw" featurename="handlers" parentElementId="xpath:/">
-    <elements xsi:type="commands:Handler" xmi:id="_k2L0IIrOEeW7h_qdP9N9fw" elementId="handler.0" contributionURI="bundleclass://handlers.NeuralAssistCodeRefactorHandler" command="_UCYfwIrOEeW7h_qdP9N9fw">
+    <elements xsi:type="commands:Handler" xmi:id="_k2L0IIrOEeW7h_qdP9N9fw" elementId="handler.0" contributionURI="bundleclass://ru.sng.asu.katp.neural-asist/handlers.NeuralAssistCodeRefactorHandler" command="_UCYfwIrOEeW7h_qdP9N9fw">
       <persistedState key="persistState" value="false"/>
     </elements>
-    <elements xsi:type="commands:Handler" xmi:id="_e4OroN9eEe2hsMR7OZZDNw" elementId="handler.1" contributionURI="bundleclass://handlers.NeuralAssistJavaDocHandler" command="_TgvO8N9eEe2hsMR7OZZDNw">
+    <elements xsi:type="commands:Handler" xmi:id="_e4OroN9eEe2hsMR7OZZDNw" elementId="handler.1" contributionURI="bundleclass://ru.sng.asu.katp.neural-asist/handlers.NeuralAssistJavaDocHandler" command="_TgvO8N9eEe2hsMR7OZZDNw">
       <persistedState key="persistState" value="false"/>
     </elements>
-    <elements xsi:type="commands:Handler" xmi:id="_8bZ1QOtJEe2Z7LAQxNqxLg" elementId="handler.2" contributionURI="bundleclass://handlers.NeuralAssistUnitTestHandler" command="_zB4hIOtJEe2Z7LAQxNqxLg">
+    <elements xsi:type="commands:Handler" xmi:id="_8bZ1QOtJEe2Z7LAQxNqxLg" elementId="handler.2" contributionURI="bundleclass://ru.sng.asu.katp.neural-asist/handlers.NeuralAssistUnitTestHandler" command="_zB4hIOtJEe2Z7LAQxNqxLg">
       <persistedState key="persistState" value="false"/>
     </elements>
-    <elements xsi:type="commands:Handler" xmi:id="_l4PJEPDVEe26l_NIXSJcoA" elementId="handler.3" contributionURI="bundleclass://handlers.NeuralAssistDiscussCodeHandler" command="_eYD8MPDVEe26l_NIXSJcoA"/>
-    <elements xsi:type="commands:Handler" xmi:id="_x-SFUPELEe2go8AypQomeQ" elementId="handler.4" contributionURI="bundleclass://handlers.NeuralAssistFixErrorsHandler" command="_tMtMsPELEe2go8AypQomeQ"/>
-    <elements xsi:type="commands:Handler" xmi:id="_naVwkPPsEe2JjYfRC0o-vw" elementId="handler.5" contributionURI="bundleclass://handlers.NeuralAssistGenerateGitCommentHandler" command="_Y1hcQPPsEe2JjYfRC0o-vw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_l4PJEPDVEe26l_NIXSJcoA" elementId="handler.3" contributionURI="bundleclass://ru.sng.asu.katp.neural-asist/handlers.NeuralAssistDiscussCodeHandler" command="_eYD8MPDVEe26l_NIXSJcoA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_x-SFUPELEe2go8AypQomeQ" elementId="handler.4" contributionURI="bundleclass://ru.sng.asu.katp.neural-asist/handlers.NeuralAssistFixErrorsHandler" command="_tMtMsPELEe2go8AypQomeQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_naVwkPPsEe2JjYfRC0o-vw" elementId="handler.5" contributionURI="bundleclass://ru.sng.asu.katp.neural-asist/handlers.NeuralAssistGenerateGitCommentHandler" command="_Y1hcQPPsEe2JjYfRC0o-vw"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_pVgfIIrOEeW7h_qdP9N9fw" featurename="menuContributions" parentElementId="xpath:/">
     <elements xsi:type="menu:MenuContribution" xmi:id="_BducUIrPEeW7h_qdP9N9fw" elementId="menucontribution.1" positionInParent="after=additions" parentId="popup">
@@ -38,7 +38,7 @@
     </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_AQJWAM2tEe2ZG5Twjghs_w" featurename="descriptors" parentElementId="xpath:/">
-    <elements xsi:type="basic:PartDescriptor" xmi:id="_CF9oIM2tEe2ZG5Twjghs_w" elementId="neural-assist.partdescriptor.Saigaview" label="NeuralAssist View" iconURI="platform:/plugin/icons/Sample.png" category="NeuralAssist" closeable="true" contributionURI="bundleclass://part.SaigaViewPart">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_CF9oIM2tEe2ZG5Twjghs_w" elementId="neural-assist.partdescriptor.saigaview" label="NeuralAssist View" iconURI="platform:/plugin/ru.sng.asu.katp.neural-asist/icons/help.gif" category="NeuralAssist" closeable="true" contributionURI="bundleclass://ru.sng.asu.katp.neural-asist/part.SaigaViewPart">
       <tags>View</tags>
       <tags>categoryTag:NeuralAssist</tags>
     </elements>

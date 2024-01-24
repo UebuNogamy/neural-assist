@@ -13,11 +13,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -32,7 +30,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class ApplyPatchWizardHelper
 {
     @Inject
-    private ILog logger;
+    private Logger logger;
     
     /**
      * Displays the apply patch wizard dialog to the user, allowing them to apply a patch to a specified target path.
@@ -59,7 +57,7 @@ public class ApplyPatchWizardHelper
         } 
         catch (Exception e) 
         {
-            logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), e.getLocalizedMessage(), e));
+            logger.error(e, e.getLocalizedMessage());
         }
     }
     

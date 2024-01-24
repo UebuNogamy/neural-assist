@@ -7,10 +7,8 @@ import java.util.concurrent.Flow.Subscription;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
 
 import model.ChatMessage;
@@ -22,7 +20,7 @@ import part.SaigaPresenter;
 public class AppendMessageToViewSubscriber implements Flow.Subscriber<Incoming>
 {
     @Inject
-    private ILog logger;
+    private Logger logger;
     
     private Flow.Subscription subscription;
     
@@ -62,7 +60,7 @@ public class AppendMessageToViewSubscriber implements Flow.Subscriber<Incoming>
     public void onError(Throwable throwable)
     {
         message = null;
-        logger.log(new Status(IStatus.ERROR, Activator.getPluginId(), throwable.getMessage(), throwable));
+        logger.error(throwable, throwable.getMessage());
     }
 
     @Override

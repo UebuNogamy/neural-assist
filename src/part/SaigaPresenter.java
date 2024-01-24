@@ -7,12 +7,10 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -32,7 +30,7 @@ import subscribers.AppendMessageToViewSubscriber;
 public class SaigaPresenter
 {
     @Inject
-    private ILog logger;
+    private Logger logger;
     
     @Inject
     private PartAccessor partAccessor;
@@ -74,7 +72,7 @@ public class SaigaPresenter
 
     public void onSendUserMessage( String text )
     {
-        logger.log(new Status(IStatus.INFO, Activator.getPluginId(), "Send user message"));
+        logger.info("Send user message");
         ChatMessage message = chatMessageFactory.createUserChatMessage( () -> text );
         conversation.add( message );
         partAccessor.findMessageView().ifPresent( part -> { 
