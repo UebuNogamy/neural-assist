@@ -13,16 +13,15 @@ public class FunctionCalls
     @Inject
     private ReadJavaDocCommand readJavaDocCommand;
     
-    
-    @Function(name="getJavaDoc", description="Get the JavaDoc for the given compilation unit.  For example,a class B defined as a member type of a class A in package x.y should have athe fully qualified name \"x.y.A.B\".Note that in order to be found, a type name (or its top level enclosingtype name) must match its corresponding compilation unit name.", type="object")
+    @Function(name="getJavaDoc", description="Получить JavaDoc для данного модуля компиляции. Например, класс B, определенный как тип-член класса A в пакете x.y, должен иметь полное имя \"x.y.A.B\". Обрати внимание, что для того, чтобы его можно было найти, имя типа (или его имя верхнего уровня, охватывающего тип) должно совпадать с названием модуля компиляции, соответствующему ему.", type="object")
     public String getJavaDoc(
-            @FunctionParam(name="fullyQualifiedName", description="A fully qualified name of the compilation unit", required=true) String fullyQualifiedClassName)
+            @FunctionParam(name="fullyQualifiedName", description="Полное имя модуля компиляции", required=true) String fullyQualifiedClassName)
     {
         return readJavaDocCommand.getClassAttachedJavadoc( fullyQualifiedClassName );
     }
-    @Function(name="getSource", description="Get the source for the given class.", type="object")
+    @Function(name="getSource", description="Получить исходный код указанного класса.", type="object")
     public String getSource(
-            @FunctionParam(name="fullyQualifiedClassName", description="A fully qualified class name of the Java class", required=true) String fullyQualifiedClassName)
+            @FunctionParam(name="fullyQualifiedClassName", description="Полное имя Java класса", required=true) String fullyQualifiedClassName)
     {
         return readJavaDocCommand.getClassAttachedSource( fullyQualifiedClassName );
     }

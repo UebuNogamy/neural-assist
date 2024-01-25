@@ -63,14 +63,14 @@ public class AnnotationToJsonConverter
      * a JSON structure.
      * <p>
      * See <a href=
-     * "https://platform.openai.com/docs/guides/gpt/function-calling">OpenAI API
+     * "https://platform.openai.com/docs/guides/gpt/function-calling">API
      * docs</a> for details.
      *
      * 
      * @param clazz
      *            a {@link Class} where we expect to find {@link Function}
      *            annotated methods.
-     * @return a {@link JsonNode} in OpenAI API format
+     * @return a {@link JsonNode} in API format
      */
     public static JsonNode convertDeclaredFunctionsToJson( Class<?> clazz )
     {

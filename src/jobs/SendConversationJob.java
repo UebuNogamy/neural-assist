@@ -29,7 +29,7 @@ public class SendConversationJob extends Job
     
     public SendConversationJob()
     {
-        super( NeuralAssistJobConstants.JOB_PREFIX + " ask ChatGPT for help");
+        super( NeuralAssistJobConstants.JOB_PREFIX + " ask Saiga for help");
         
     }
     @Override

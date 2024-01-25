@@ -111,7 +111,7 @@ public class SaigaPresenter
         });
     }
     /**
-     * Cancels all running ChatGPT jobs
+     * Cancels all running Saiga jobs
      */
     public void onStop()
     {

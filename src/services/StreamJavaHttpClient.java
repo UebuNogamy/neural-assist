@@ -35,8 +35,8 @@ import model.Type;
 import prompt.PromptLoader;
 
 /**
- * A Java HTTP client for streaming requests to OpenAI API.
- * This class allows subscribing to responses received from the OpenAI API and processes the chat completions.
+ * A Java HTTP client for streaming requests to API.
+ * This class allows subscribing to responses received from the API and processes the chat completions.
  */
 @Creatable
 public class StreamJavaHttpClient
@@ -69,7 +69,7 @@ public class StreamJavaHttpClient
     }
     
     /**
-     * Subscribes a given Flow.Subscriber to receive String data from OpenAI API responses.
+     * Subscribes a given Flow.Subscriber to receive String data from API responses.
      * @param subscriber the Flow.Subscriber to be subscribed to the publisher
      */
     public synchronized void subscribe(Flow.Subscriber<Incoming> subscriber)
@@ -121,6 +121,10 @@ public class StreamJavaHttpClient
             requestBody.put("messages", messages);
             requestBody.put("temperature", 0.1);
             requestBody.put("stream", true);
+            requestBody.put("max_tokens", 3000);
+            requestBody.put("top_k", 30);
+            requestBody.put("top_p", 0.9);
+            requestBody.put("repeat_penalty", 1.1);
     
             String jsonString;
             jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(requestBody);
@@ -133,13 +137,13 @@ public class StreamJavaHttpClient
     }
     
     /**
-     * Creates and returns a Runnable that will execute the HTTP request to OpenAI API
+     * Creates and returns a Runnable that will execute the HTTP request to API
      * with the given conversation prompt and process the responses.
      * <p>
      * Note: this method does not block and the returned Runnable should be executed
      * to perform the actual HTTP request and processing.
      *
-     * @param prompt the conversation to be sent to the OpenAI API
+     * @param prompt the conversation to be sent to the API
      * @return a Runnable that performs the HTTP request and processes the responses
      */
     public Runnable run( Conversation prompt ) 
@@ -151,14 +155,14 @@ public class StreamJavaHttpClient
     		
     		String requestBody = getRequestBody(prompt);
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(configuration.getApiUrl()))
-                    .timeout( Duration.ofSeconds( configuration.getRequestTimoutSeconds() ) )
+                    .timeout( Duration.ofSeconds( configuration.getRequestTimoutSeconds() * 4 ) )
 //    				.header("Authorization", "Bearer " + configuration.getApiKey())
     				.header("Accept", "text/event-stream")
     				.header("Content-Type", "application/json")
     				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
     				.build();
     		
-    		logger.info("Sending request to ChatGPT.\n\n" + requestBody);
+    		logger.info("Sending request to Saiga.\n\n" + requestBody);
     		
     		try
     		{

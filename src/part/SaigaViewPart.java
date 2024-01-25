@@ -179,7 +179,7 @@ public class SaigaViewPart
         browser.setText(htmlTemplate);
     }
     /**
-     * Loads the CSS files for the ChatGPTViewPart component.
+     * Loads the CSS files for the SaigaViewPart component.
      *
      * @return A concatenated string containing the content of the loaded CSS files.
      */
@@ -202,7 +202,7 @@ public class SaigaViewPart
         return css.toString();
     }
     /**
-     * Loads the JavaScript files for the ChatGPTViewPart component.
+     * Loads the JavaScript files for the SaigaViewPart component.
      *
      * @return A concatenated string containing the content of the loaded JavaScript files.
      */
