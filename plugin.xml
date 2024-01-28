@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension id="fragment" point="org.eclipse.e4.workbench.model">
+      <fragment
+            apply="always"
+            uri="fragment.e4xmi">
+      </fragment>
+   </extension>
+   <extension point="org.eclipse.ui.preferencePages">      
+      <page
+            class="preferences.PreferencePage"
+            id="preferences.PreferencePage"
+            name="NeuralAsist">
+      </page>
+        <page
+            id="preferences.PromptsPreferencePage"
+            name="Prompts"
+            category="preferences.PreferencePage"
+            class="preferences.PromptsPreferencePage">
+        </page>      
+   </extension>
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+</plugin>

@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-11-openjdk-amd64">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-ext-emoji-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-ext-gfm-strikethrough-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-ext-ins-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-ext-superscript-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-ext-tables-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-ext-wikilink-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-html2md-converter-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-jira-converter-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-ast-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-builder-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-collection-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-data-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-dependency-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-format-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-html-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-misc-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-options-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-sequence-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/flexmark-util-visitor-0.64.8.jar"/>
+	<classpathentry kind="lib" path="dependencies/jackson-annotations-2.15.0-rc1.jar"/>
+	<classpathentry kind="lib" path="dependencies/jackson-core-2.15.0-rc1.jar"/>
+	<classpathentry kind="lib" path="dependencies/jackson-databind-2.15.0-rc1.jar"/>
+	<classpathentry kind="lib" path="dependencies/jsoup-1.15.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
