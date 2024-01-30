@@ -34,100 +34,100 @@ public class ChatMessageFactory
         preferenceStore = Activator.getDefault().getPreferenceStore();
     }
 
-    public ChatMessage createAssistantChatMessage( String text )
+    public ChatMessage createAssistantChatMessage(String text)
     {
-        ChatMessage message = new ChatMessage( UUID.randomUUID().toString(), "assistant" );
-        message.setContent( text );
+        ChatMessage message = new ChatMessage(UUID.randomUUID().toString(), "assistant");
+        message.setContent(text);
         return message;
 
     }
     
-    public ChatMessage createUserChatMessage( Prompts type, Context context )
+    public ChatMessage createUserChatMessage(Prompts type, Context context)
     {
         Supplier<String> promptSupplier;
-        switch ( type )
+        switch (type)
         {
             case DOCUMENT:
-                promptSupplier = javaDocPromptSupplier( context );
+                promptSupplier = javaDocPromptSupplier(context);
                 break;
             case TEST_CASE:
-                promptSupplier = unitTestSupplier( context );
+                promptSupplier = unitTestSupplier(context);
                 break;
             case REFACTOR:
-                promptSupplier = refactorPromptSupplier( context );
+                promptSupplier = refactorPromptSupplier(context);
                 break;
             case DISCUSS:
-                promptSupplier = discussCodePromptSupplier( context );
+                promptSupplier = discussCodePromptSupplier(context);
                 break;
             case FIX_ERRORS:
-                promptSupplier = fixErrorsPromptSupplier( context );
+                promptSupplier = fixErrorsPromptSupplier(context);
                 break;
             default:
                 throw new IllegalArgumentException();
         }
-        return createUserChatMessage( promptSupplier );
+        return createUserChatMessage(promptSupplier);
     }
     
-    private Supplier<String> fixErrorsPromptSupplier( Context context )
+    private Supplier<String> fixErrorsPromptSupplier(Context context)
     {
-        return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.FIX_ERRORS.preferenceName() ), 
+        return () -> promptLoader.updatePromptText(preferenceStore.getString(Prompts.FIX_ERRORS.preferenceName()), 
                 "${documentText}", context.getFileContents(),
                 "${fileName}", context.getFileName(),
                 "${lang}", context.getLang(),
                 "${errors}", context.getSelectedContent()
-                );
+               );
     }
 
-    private Supplier<String> discussCodePromptSupplier( Context context )
+    private Supplier<String> discussCodePromptSupplier(Context context)
     {
-        return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.DISCUSS.preferenceName() ), 
+        return () -> promptLoader.updatePromptText(preferenceStore.getString(Prompts.DISCUSS.preferenceName()), 
                 "${documentText}", context.getFileContents(),
                 "${fileName}", context.getFileName(),
                 "${lang}", context.getLang()
-                );
+               );
     }
 
-    private Supplier<String> javaDocPromptSupplier( Context context )
+    private Supplier<String> javaDocPromptSupplier(Context context)
     {
-        return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.DOCUMENT.preferenceName() ), 
+        return () -> promptLoader.updatePromptText(preferenceStore.getString(Prompts.DOCUMENT.preferenceName()), 
                     "${documentText}", context.getFileContents(),
                     "${javaType}", context.getSelectedItemType(),
                     "${name}", context.getSelectedItem(),
                     "${lang}", context.getLang()
-                    );
+                   );
     }
-    private Supplier<String> refactorPromptSupplier( Context context )
+    private Supplier<String> refactorPromptSupplier(Context context)
     {
-        return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.REFACTOR.preferenceName() ), 
+        return () -> promptLoader.updatePromptText(preferenceStore.getString(Prompts.REFACTOR.preferenceName()), 
                 "${documentText}", context.getFileContents(),
                 "${selectedText}", context.getSelectedContent(),
                 "${fileName}", context.getFileName(),
                 "${lang}", context.getLang()
-                );
+               );
     }
-    private Supplier<String> unitTestSupplier( Context context )
+    private Supplier<String> unitTestSupplier(Context context)
     {
-        return () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.TEST_CASE.preferenceName() ), 
+        return () -> promptLoader.updatePromptText(preferenceStore.getString(Prompts.TEST_CASE.preferenceName()), 
                 "${documentText}", context.getFileContents(),
                 "${javaType}", context.getSelectedItemType(),
                 "${name}", context.getSelectedItem(),
                 "${lang}", context.getLang()
-                );
+               );
     }
 
     
-    public ChatMessage createGenerateGitCommitCommentJob( String patch )
+    public ChatMessage createGenerateGitCommitCommentJob(String patch)
     {
-        Supplier<String> promptSupplier  =  () -> promptLoader.updatePromptText( preferenceStore.getString( Prompts.GIT_COMMENT.preferenceName() ), 
-                "${content}", patch );
+        Supplier<String> promptSupplier  =  () -> promptLoader.updatePromptText(preferenceStore.getString(Prompts.GIT_COMMENT.preferenceName()), 
+                "${content}", patch);
         
-        return createUserChatMessage( promptSupplier );
+        return createUserChatMessage(promptSupplier);
     }
     
-    public ChatMessage createUserChatMessage( Supplier<String> promptSupplier )
+    public ChatMessage createUserChatMessage(Supplier<String> promptSupplier)
     {
-        ChatMessage message = new ChatMessage( UUID.randomUUID().toString(), "user" );
-        message.setContent( promptSupplier.get() );
+        ChatMessage message = new ChatMessage(UUID.randomUUID().toString(), "user");
+        message.setContent(promptSupplier.get());
         return message;        
     }
 

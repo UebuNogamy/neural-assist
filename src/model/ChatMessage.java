@@ -17,11 +17,11 @@ public class ChatMessage {
 	 * @param id The unique identifier for the chat message
 	 * @param role The role associated with the chat message (e.g., "user", "assistant")
 	 */
-	public ChatMessage( String id, String role )
+	public ChatMessage(String id, String role)
 	{
-	    this( id, null, role);
+	    this(id, null, role);
 	}
-   public ChatMessage( String id, String name, String role )
+   public ChatMessage(String id, String name, String role)
     {
         this.id = id;
         this.role = role;
@@ -32,9 +32,9 @@ public class ChatMessage {
 	 * Appends the given message to the existing message.
 	 * @param msg The message to be appended
 	 */
-	public void append( String msg )
+	public void append(String msg)
 	{
-		this.content.append( msg );
+		this.content.append(msg);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class ChatMessage {
 	{
 	    return functionCall;
 	}
-    public void setFunctionCall( FunctionCall functionCall )
+    public void setFunctionCall(FunctionCall functionCall)
     {
         this.functionCall = functionCall;
     }
@@ -57,8 +57,8 @@ public class ChatMessage {
 	 * @param message The new message content
 	 */
 	public void setContent(String message) {
-		this.content.setLength( 0 );
-		this.content.append( message );
+		this.content.setLength(0);
+		this.content.append(message);
 	}
 
 	/**

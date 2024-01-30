@@ -34,28 +34,28 @@ public class FunctionCallSubscriber implements Flow.Subscriber<Incoming>
     }
     
     @Override
-    public void onSubscribe( Subscription subscription )
+    public void onSubscribe(Subscription subscription)
     {
         this.subscription = subscription;
-        jsonBuffer.setLength( 0 );
+        jsonBuffer.setLength(0);
         subscription.request(1);
 
     }
 
     @Override
-    public void onNext( Incoming item )
+    public void onNext(Incoming item)
     {
-        if ( Type.FUNCTION_CALL == item.getType() )
+        if (Type.FUNCTION_CALL == item.getType())
         {
-            jsonBuffer.append( item.getPayload() );
+            jsonBuffer.append(item.getPayload());
         }
         subscription.request(1);
     }
 
     @Override
-    public void onError( Throwable throwable )
+    public void onError(Throwable throwable)
     {
-        jsonBuffer.setLength( 0 );
+        jsonBuffer.setLength(0);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class FunctionCallSubscriber implements Flow.Subscriber<Incoming>
         String json = jsonBuffer.toString();
         json += "}";
 
-        if ( !json.startsWith( "\"function_call\"" ) )
+        if (!json.startsWith("\"function_call\""))
         {
             subscription.request(1);
             return;
@@ -74,13 +74,13 @@ public class FunctionCallSubscriber implements Flow.Subscriber<Incoming>
             // 1. append assistant request to call a function to the conversation
             ObjectMapper mapper = new ObjectMapper();
             // -- convert JSON to FuncationCall object
-            var functionCall = mapper.readValue( json.replace( "\"function_call\" : ","" ), FunctionCall.class );
+            FunctionCall functionCall = mapper.readValue(json.replace("\"function_call\" : ",""), FunctionCall.class);
             
             ExecuteFunctionCallJob job = executeFunctionCallJobProvider.get();
-            job.setFunctionCall( functionCall );
+            job.setFunctionCall(functionCall);
             job.schedule();
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
         	logger.error(e, e.getMessage());
         }

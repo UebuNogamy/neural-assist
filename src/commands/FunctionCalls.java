@@ -17,13 +17,13 @@ public class FunctionCalls
     public String getJavaDoc(
             @FunctionParam(name="fullyQualifiedName", description="Полное имя модуля компиляции", required=true) String fullyQualifiedClassName)
     {
-        return readJavaDocCommand.getClassAttachedJavadoc( fullyQualifiedClassName );
+        return readJavaDocCommand.getClassAttachedJavadoc(fullyQualifiedClassName);
     }
     @Function(name="getSource", description="Получить исходный код указанного класса.", type="object")
     public String getSource(
             @FunctionParam(name="fullyQualifiedClassName", description="Полное имя Java класса", required=true) String fullyQualifiedClassName)
     {
-        return readJavaDocCommand.getClassAttachedSource( fullyQualifiedClassName );
+        return readJavaDocCommand.getClassAttachedSource(fullyQualifiedClassName);
     }
 
 }

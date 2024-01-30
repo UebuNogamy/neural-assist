@@ -15,7 +15,7 @@ public class FunctionExecutor
 {
     Object functions;
     
-    public FunctionExecutor( Object functions )
+    public FunctionExecutor(Object functions)
     {
         this.functions = functions;
     }
@@ -28,38 +28,38 @@ public class FunctionExecutor
      */
     public Method[] getFunctions()
     {
-        return Arrays.stream( functions.getClass().getDeclaredMethods() )
-                .filter( method -> Objects.nonNull( method.getAnnotation( Function.class ) ) )
-                .toArray( Method[]::new );
+        return Arrays.stream(functions.getClass().getDeclaredMethods())
+                .filter(method -> Objects.nonNull(method.getAnnotation(Function.class)))
+                .toArray(Method[]::new);
     }
     
     
 
-    public CompletableFuture<Object> call( String name, Map<String, String> args )
+    public CompletableFuture<Object> call(String name, Map<String, String> args)
     {
-        Method method = getFunctionCallbackByName( name ).orElseThrow( () -> new RuntimeException("Function " + name + " not found!" ) ); 
-        method.getAnnotationsByType( FunctionParam.class );
-        Object[] argValues = mapArguments( method, args );
-        CompletableFuture<Object> future = CompletableFuture.supplyAsync( () -> invokeMethod( method, argValues ) );
+        Method method = getFunctionCallbackByName(name).orElseThrow(() -> new RuntimeException("Function " + name + " not found!")); 
+        method.getAnnotationsByType(FunctionParam.class);
+        Object[] argValues = mapArguments(method, args);
+        CompletableFuture<Object> future = CompletableFuture.supplyAsync(() -> invokeMethod(method, argValues));
         return future;
     }
     
-    private Object invokeMethod( Method method, Object[] args )
+    private Object invokeMethod(Method method, Object[] args)
     {
         try
         {
-            return method.invoke( functions, args );
+            return method.invoke(functions, args);
         }
-        catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException e )
+        catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
         {
-            throw new RuntimeException( e );
+            throw new RuntimeException(e);
         }
         
     }
     
-    public CompletableFuture<Object> call( String name, String[] args )
+    public CompletableFuture<Object> call(String name, String[] args)
     {
-        return call( name, toMap(args) );
+        return call(name, toMap(args));
     }
     
     /**
@@ -69,11 +69,11 @@ public class FunctionExecutor
      * @param argMap
      * @return
      */
-    public Object[] mapArguments( Method method, Map<String, String> argMap )
+    public Object[] mapArguments(Method method, Map<String, String> argMap)
     {
-        return Arrays.stream( method.getParameters() )
-                    .map( FunctionExecutor::toParamName )
-                    .map( argMap::get )
+        return Arrays.stream(method.getParameters())
+                    .map(FunctionExecutor::toParamName)
+                    .map(argMap::get)
                     .toArray();
         
     }
@@ -85,13 +85,13 @@ public class FunctionExecutor
      * @return the Map representation of the key-value pairs
      * @throws IllegalArgumentException if the input array is not a key-value array
      */
-    public Map<String, String> toMap( String[] keyVal )
+    public Map<String, String> toMap(String[] keyVal)
     {
-        if ( keyVal.length % 2 != 0 )
+        if (keyVal.length % 2 != 0)
         {
             throw new IllegalArgumentException("Not a key-val array");
         }
-        var map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         for (int i = 0; i < keyVal.length; i += 2) 
         {
             map.put(keyVal[i], keyVal[i + 1]);
@@ -105,10 +105,10 @@ public class FunctionExecutor
      * @param name the name of the function
      * @return an Optional containing the function callback method, or an empty Optional if the function is not found
      */
-    public Optional<Method> getFunctionCallbackByName( String name )
+    public Optional<Method> getFunctionCallbackByName(String name)
     {
-        return Arrays.stream( getFunctions() )
-                     .filter( method -> toFunctionName( method ).equals( name ) )
+        return Arrays.stream(getFunctions())
+                     .filter(method -> toFunctionName(method).equals(name))
                      .findFirst();
     }
     /**
@@ -117,12 +117,12 @@ public class FunctionExecutor
      * @param parameter the Parameter object
      * @return the parameter name, or the annotated name if present, or the default name if no annotation is found
      */
-    public static String toParamName( Parameter parameter )
+    public static String toParamName(Parameter parameter)
     {
-        return Optional.ofNullable( parameter.getAnnotation( FunctionParam.class ) )
-                    .map( FunctionParam::name )
-                    .filter( Predicate.not( String::isBlank ) )
-                    .orElse( parameter.getName() );
+        return Optional.ofNullable(parameter.getAnnotation(FunctionParam.class))
+                    .map(FunctionParam::name)
+                    .filter(name -> !name.isEmpty())
+                    .orElse(parameter.getName());
     }
     /**
      * Retrieves the name of the function based on the provided Method object.
@@ -130,12 +130,12 @@ public class FunctionExecutor
      * @param method the Method object representing the function
      * @return the name of the function, or the annotated name if present, or the default name if no annotation is found
      */
-    public static String toFunctionName( Method method )
+    public static String toFunctionName(Method method)
     {
-        return Optional.ofNullable( method.getAnnotation( Function.class ) )
-                .map( Function::name )
-                .filter( Predicate.not(String::isBlank))
-                .orElse( method.getName() );
+        return Optional.ofNullable(method.getAnnotation(Function.class))
+                .map(Function::name)
+                .filter(name -> !name.isEmpty())
+                .orElse(method.getName());
     }
     
 }

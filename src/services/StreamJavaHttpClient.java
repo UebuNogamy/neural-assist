@@ -25,6 +25,7 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import commands.FunctionExecutorProvider;
@@ -63,7 +64,7 @@ public class StreamJavaHttpClient
 
     }
     
-    public void setCancelProvider( Supplier<Boolean> isCancelled )
+    public void setCancelProvider(Supplier<Boolean> isCancelled)
     {
         this.isCancelled = isCancelled;
     }
@@ -85,39 +86,39 @@ public class StreamJavaHttpClient
     {
         try
         {
-            var objectMapper = new ObjectMapper();
-            var requestBody = new LinkedHashMap<String, Object>();
-            var messages = new ArrayList<Map<String, Object>>();
+            ObjectMapper objectMapper = new ObjectMapper();
+            LinkedHashMap<String, Object> requestBody = new LinkedHashMap<>();
+            ArrayList<Map<String, Object>> messages = new ArrayList<>();
     
-            var systemMessage = new LinkedHashMap<String, Object> ();
+            LinkedHashMap<String, Object> systemMessage = new LinkedHashMap<>();
             systemMessage.put("role", "system");
-            systemMessage.put("content", promptLoader.createPromptText("system-prompt.txt") );
+            systemMessage.put("content", promptLoader.createPromptText("system-prompt.txt"));
             messages.add(systemMessage);
     
-            for ( ChatMessage message : prompt.messages() )
+            for (ChatMessage message : prompt.messages())
             {
-                var userMessage = new LinkedHashMap<String,Object>();
+            	LinkedHashMap<String,Object> userMessage = new LinkedHashMap<>();
                 userMessage.put("role", message.getRole());
-                if ( Objects.nonNull( message.getContent() ) )
+                if (Objects.nonNull(message.getContent()))
                 {
-                    userMessage.put("content", message.getContent() );
+                    userMessage.put("content", message.getContent());
                 }
-                if ( Objects.nonNull( message.getFunctionCall() ) )
+                if (Objects.nonNull(message.getFunctionCall()))
                 {
-                    var functionCall = new LinkedHashMap<String, Object> ();
-                    functionCall.put( "name", message.getFunctionCall().getName() );
-                    functionCall.put( "arguments", objectMapper.writeValueAsString(  message.getFunctionCall().getArguments() ) );
+                	LinkedHashMap<String, Object> functionCall = new LinkedHashMap<>();
+                    functionCall.put("name", message.getFunctionCall().getName());
+                    functionCall.put("arguments", objectMapper.writeValueAsString(message.getFunctionCall().getArguments()));
                     
-                    userMessage.put( "function_call", functionCall );
+                    userMessage.put("function_call", functionCall);
                 }
-                if ( Objects.nonNull( message.getName() ) )
+                if (Objects.nonNull(message.getName()))
                 {
-                    userMessage.put( "name", message.getName() );
+                    userMessage.put("name", message.getName());
                 }
                 messages.add(userMessage);
             }
 //            requestBody.put("model", configuration.getModelName());
-            requestBody.put("functions", AnnotationToJsonConverter.convertDeclaredFunctionsToJson( functionExecutor.get().getFunctions() ) );
+            requestBody.put("functions", AnnotationToJsonConverter.convertDeclaredFunctionsToJson(functionExecutor.get().getFunctions()));
             requestBody.put("messages", messages);
             requestBody.put("temperature", 0.1);
             requestBody.put("stream", true);
@@ -132,7 +133,7 @@ public class StreamJavaHttpClient
         }
         catch (JsonProcessingException e)
         {
-            throw new RuntimeException( e );
+            throw new RuntimeException(e);
         }
     }
     
@@ -146,16 +147,16 @@ public class StreamJavaHttpClient
      * @param prompt the conversation to be sent to the API
      * @return a Runnable that performs the HTTP request and processes the responses
      */
-    public Runnable run( Conversation prompt ) 
+    public Runnable run(Conversation prompt) 
     {
     	return () ->  {
     		HttpClient client = HttpClient.newBuilder()
-    		                              .connectTimeout( Duration.ofSeconds(configuration.getConnectionTimoutSeconds()) )
+    		                              .connectTimeout(Duration.ofSeconds(configuration.getConnectionTimoutSeconds()))
     		                              .build();
     		
     		String requestBody = getRequestBody(prompt);
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(configuration.getApiUrl()))
-                    .timeout( Duration.ofSeconds( configuration.getRequestTimoutSeconds() * 4 ) )
+                    .timeout(Duration.ofSeconds(configuration.getRequestTimoutSeconds() * 4))
 //    				.header("Authorization", "Bearer " + configuration.getApiKey())
     				.header("Accept", "text/event-stream")
     				.header("Content-Type", "application/json")
@@ -173,51 +174,51 @@ public class StreamJavaHttpClient
     			    logger.error("Request failed with status code: " + response.statusCode() + " and response body: " + response.body());
     			}
     			try (var inputStream = response.body();
-    			     var inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-    			     var reader = new BufferedReader(inputStreamReader)) 
+    			     InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+    			     BufferedReader reader = new BufferedReader(inputStreamReader)) 
     			{
     				String line;
-    				while ((line = reader.readLine()) != null && !isCancelled.get() )
+    				while ((line = reader.readLine()) != null && !isCancelled.get())
     				{
     					if (line.startsWith("data:"))
     					{
-    					    var data = line.substring(5).trim();
+    					    String data = line.substring(5).trim();
     						if ("[DONE]".equals(data))
     						{
     							break;
     						} 
     						else
     						{
-    						    var mapper = new ObjectMapper();
-    						    var choice = mapper.readTree(data).get("choices").get(0);
-    						    var node =  choice.get("delta");
-    							if (node.has("content") )
+    						    ObjectMapper mapper = new ObjectMapper();
+    						    JsonNode choice = mapper.readTree(data).get("choices").get(0);
+    						    JsonNode node =  choice.get("delta");
+    							if (node.has("content"))
     							{
-    							    var content = node.get("content").asText();
-    							    if ( !"null".equals( content ) )
+    							    String content = node.get("content").asText();
+    							    if (!"null".equals(content))
     							    {
     							        publisher.submit(new Incoming(Type.CONTENT, content));
     							    }
     							}
-    							if ( node.has( "function_call" ) )
+    							if (node.has("function_call"))
     							{
-    							    var functionNode = node.get( "function_call" );
-    							    if ( functionNode.has( "name" ) )
+    							    JsonNode functionNode = node.get("function_call");
+    							    if (functionNode.has("name"))
     							    {
-    							        publisher.submit( new Incoming(Type.FUNCTION_CALL, String.format( "\"function_call\" : { \n \"name\": \"%s\",\n \"arguments\" :", functionNode.get("name").asText() ) ) );
+    							        publisher.submit(new Incoming(Type.FUNCTION_CALL, String.format("\"function_call\" : { \n \"name\": \"%s\",\n \"arguments\" :", functionNode.get("name").asText())));
     							    }
-    							    if ( functionNode.has( "arguments" ) )
+    							    if (functionNode.has("arguments"))
     							    {
-    							        publisher.submit( new Incoming(Type.FUNCTION_CALL, node.get("function_call").get("arguments").asText()) );
+    							        publisher.submit(new Incoming(Type.FUNCTION_CALL, node.get("function_call").get("arguments").asText()));
     							    }
     							}
     						}
     					}
     				}
     			}
-    			if ( isCancelled.get() )
+    			if (isCancelled.get())
     			{
-    				publisher.closeExceptionally( new CancellationException() );
+    				publisher.closeExceptionally(new CancellationException());
     			}
     		}
     		catch (Exception e)

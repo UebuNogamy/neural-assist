@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import prompt.PromptParser;
+import sun.misc.IOUtils;
 
 
 public class SaigaViewPart
@@ -61,12 +62,12 @@ public class SaigaViewPart
     
     public void clearChatView()
     {
-        uiSync.asyncExec(() ->  initializeChatView( browser ) );
+        uiSync.asyncExec(() ->  initializeChatView(browser));
     }
     public void clearUserInput()
     {
         uiSync.asyncExec(() -> {
-            inputArea.setText( "" );
+            inputArea.setText("");
         });
     }
     
@@ -79,7 +80,7 @@ public class SaigaViewPart
         Composite browserContainer = new Composite(sashForm, SWT.NONE);
         browserContainer.setLayout(new FillLayout());
         
-        browser = createChatView( browserContainer );
+        browser = createChatView(browserContainer);
 
         // Create the JavaScript-to-Java callback
         new CopyCodeFunction(browser, "eclipseFunc");
@@ -101,16 +102,16 @@ public class SaigaViewPart
         sashForm.setWeights(new int[]{85, 15}); 
     }
 
-    private Button createClearChatButton( Composite parent, Composite controls )
+    private Button createClearChatButton(Composite parent, Composite controls)
     {
         Button clearButton = new Button(controls, SWT.PUSH);
         clearButton.setText("Clear");
         try
         {
             Image clearIcon = PlatformUI.getWorkbench().getSharedImages().getImage(org.eclipse.ui.ISharedImages.IMG_ELCL_REMOVE);
-            clearButton.setImage( clearIcon );
+            clearButton.setImage(clearIcon);
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
         	logger.error(e, e.getMessage());
         }
@@ -139,41 +140,41 @@ public class SaigaViewPart
         });
         return stopButton;
     }
-    private Text createUserInput( Composite controls )
+    private Text createUserInput(Composite controls)
     {
         Text inputArea = new Text(controls, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         inputArea.addTraverseListener(new TraverseListener() {
             public void keyTraversed(TraverseEvent e) {
                 if (e.detail == SWT.TRAVERSE_RETURN && (e.stateMask & SWT.MODIFIER_MASK) == 0) {
-                    presenter.onSendUserMessage( inputArea.getText() );
+                    presenter.onSendUserMessage(inputArea.getText());
                 }
             }
         });
         return inputArea;
     }
 
-    private Browser createChatView( Composite parent )
+    private Browser createChatView(Composite parent)
     {
-        Browser browser = new Browser( parent, SWT.WEBKIT);
-        initializeChatView( browser );
-        initializeFunctions( browser );
+        Browser browser = new Browser(parent, SWT.WEBKIT);
+        initializeChatView(browser);
+        initializeFunctions(browser);
         return browser;
     }
 
-    private void initializeFunctions( Browser browser )
+    private void initializeFunctions(Browser browser)
     {
-        new CopyCodeFunction( browser, "eclipseCopyCode" );
-        new ApplyPatchFunction( browser, "eclipseApplyPatch" );
+        new CopyCodeFunction(browser, "eclipseCopyCode");
+        new ApplyPatchFunction(browser, "eclipseApplyPatch");
     }
 
-    private void initializeChatView( Browser browser )
+    private void initializeChatView(Browser browser)
     {
         String htmlTemplate = "<html><style>${css}</style><script>${js}</script><body><div id='content'></div></body></html>";
         
         String js  = loadJavaScripts();
         String css = loadCss();
-        htmlTemplate = htmlTemplate.replace("${js}", js );
-        htmlTemplate = htmlTemplate.replace("${css}", css );
+        htmlTemplate = htmlTemplate.replace("${js}", js);
+        htmlTemplate = htmlTemplate.replace("${css}", css);
         
         // Initialize the browser with base HTML and CSS
         browser.setText(htmlTemplate);
@@ -187,11 +188,11 @@ public class SaigaViewPart
     {
         StringBuilder css = new StringBuilder();
         String[] cssFiles = {"textview.css", "dark.min.css"};
-        for ( String file : cssFiles )
+        for (String file : cssFiles)
         {
-            try ( InputStream in = FileLocator.toFileURL( new URL("platform:/plugin/ru.sng.asu.katp.neural-asist/css/" + file) ).openStream() )
+            try (InputStream in = FileLocator.toFileURL(new URL("platform:/plugin/ru.sng.asu.katp.neural-asist/css/" + file)).openStream())
             {
-                css.append( new String(in.readAllBytes(), StandardCharsets.UTF_8) );
+                css.append(new String(IOUtils.readAllBytes(in), StandardCharsets.UTF_8));
                 css.append("\n");
             }
             catch (IOException e)
@@ -210,11 +211,11 @@ public class SaigaViewPart
     {
         String[] jsFiles = {"highlight.min.js"};
         StringBuilder js = new StringBuilder();
-        for ( String file : jsFiles )
+        for (String file : jsFiles)
         {
-            try ( InputStream in = FileLocator.toFileURL( new URL("platform:/plugin/ru.sng.asu.katp.neural-asist/js/" + file) ).openStream() )
+            try (InputStream in = FileLocator.toFileURL(new URL("platform:/plugin/ru.sng.asu.katp.neural-asist/js/" + file)).openStream())
             {
-                js.append( new String(in.readAllBytes(), StandardCharsets.UTF_8) );
+                js.append(new String(IOUtils.readAllBytes(in), StandardCharsets.UTF_8));
                 js.append("\n");
             }
             catch (IOException e)
@@ -225,14 +226,14 @@ public class SaigaViewPart
         return js.toString();
     }
 
-    public void setMessageHtml( String messageId, String messageBody)
+    public void setMessageHtml(String messageId, String messageBody)
     {
         uiSync.asyncExec(() -> {
-            PromptParser parser = new PromptParser( messageBody );
+            PromptParser parser = new PromptParser(messageBody);
             
             String fixedHtml = escapeHtmlQuotes(fixLineBreaks(parser.parseToHtml()));
             // inject and highlight html message
-            browser.execute( "document.getElementById(\"message-" + messageId + "\").innerHTML = '" + fixedHtml + "';hljs.highlightAll();");
+            browser.execute("document.getElementById(\"message-" + messageId + "\").innerHTML = '" + fixedHtml + "';hljs.highlightAll();");
             // Scroll down
             browser.execute("window.scrollTo(0, document.body.scrollHeight);");
         });
@@ -261,11 +262,11 @@ public class SaigaViewPart
     public void appendMessage(String messageId, String role)
     {
         // 
-        String cssClass = "user".equals( role ) ? "chat-bubble me" : "chat-bubble you";
+        String cssClass = "user".equals(role) ? "chat-bubble me" : "chat-bubble you";
         uiSync.asyncExec(() -> {
             browser.execute("node = document.createElement('div');node.setAttribute('id', 'message-${id}');node.setAttribute('class', '${cssClass}');document.getElementById('content').appendChild(node);"
-            		.replace("${id}", messageId )
-            	   .replace( "${cssClass}", cssClass )
+            		.replace("${id}", messageId)
+            	   .replace("${cssClass}", cssClass)
             	);
             browser.execute(
                     // Scroll down
@@ -273,16 +274,16 @@ public class SaigaViewPart
         });
     }
 
-    public Object removeMessage( int id )
+    public Object removeMessage(int id)
     {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public void setInputEnabled( boolean b )
+    public void setInputEnabled(boolean b)
     {
         uiSync.asyncExec(() -> {
-            inputArea.setEnabled( b );
+            inputArea.setEnabled(b);
         });
     }
     

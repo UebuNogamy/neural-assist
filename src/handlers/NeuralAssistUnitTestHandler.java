@@ -7,6 +7,6 @@ public class NeuralAssistUnitTestHandler extends NeuralAssistHandlerTemplate
     
     public NeuralAssistUnitTestHandler()
     {
-        super( Prompts.TEST_CASE );
+        super(Prompts.TEST_CASE);
     }
 }

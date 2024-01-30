@@ -16,7 +16,7 @@ public class FunctionExecutorProvider
     
     public FunctionExecutor get()
     {
-        return new FunctionExecutor( functionCalls );
+        return new FunctionExecutor(functionCalls);
     }
     
 }

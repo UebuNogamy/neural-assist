@@ -53,14 +53,14 @@ public class ClientConfiguration
     public int getConnectionTimoutSeconds()
     {
         IPreferenceStore prefernceStore = Activator.getDefault().getPreferenceStore();
-        return Integer.parseInt( prefernceStore.getString(PreferenceConstants.CONNECTION_TIMEOUT_SECONDS) );
+        return Integer.parseInt(prefernceStore.getString(PreferenceConstants.CONNECTION_TIMEOUT_SECONDS));
         
     }
     
     public int getRequestTimoutSeconds()
     {
         IPreferenceStore prefernceStore = Activator.getDefault().getPreferenceStore();
-        return Integer.parseInt( prefernceStore.getString(PreferenceConstants.REQUEST_TIMEOUT_SECONDS) );
+        return Integer.parseInt(prefernceStore.getString(PreferenceConstants.REQUEST_TIMEOUT_SECONDS));
         
     }
     

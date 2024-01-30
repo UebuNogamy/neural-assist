@@ -13,7 +13,7 @@ public enum Prompts
     private final String fileName;
     private final String description;
     
-    private Prompts( String fileName, String description )
+    private Prompts(String fileName, String description)
     {
         this.fileName = fileName;
         this.description = description;

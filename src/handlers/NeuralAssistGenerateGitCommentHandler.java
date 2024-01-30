@@ -19,18 +19,24 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectInserter;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
+import model.ChatMessage;
 import part.SaigaPresenter;
 import prompt.ChatMessageFactory;
 import prompt.Prompts;
 
-@SuppressWarnings( "restriction" )
+@SuppressWarnings("restriction")
 public class NeuralAssistGenerateGitCommentHandler
 {
     @Inject
@@ -41,90 +47,90 @@ public class NeuralAssistGenerateGitCommentHandler
     private SaigaPresenter viewPresenter;
 
     @Execute
-    public void execute( @Named( IServiceConstants.ACTIVE_SHELL ) Shell s )
+    public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell s)
     {
         // Get the active editor
-        var activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        var activeEditor = activePage.getActiveEditor();
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorPart activeEditor = activePage.getActiveEditor();
 
         try
         {
             // Obtain the repository from the active editor's project
-            var mapping = RepositoryMapping.getMapping( activeEditor.getEditorInput().getAdapter( IResource.class ) );
-            var repository = mapping.getRepository();
+            RepositoryMapping mapping = RepositoryMapping.getMapping(activeEditor.getEditorInput().getAdapter(IResource.class));
+            Repository repository = mapping.getRepository();
 
             // Obtain the Git object for the repository
-            try ( var git = new Git( repository ) )
+            try (Git git = new Git(repository))
             {
                 // Get the staged changes
-                var head = repository.resolve( "HEAD" );
-                if ( Objects.isNull( head ) )
+                ObjectId head = repository.resolve("HEAD");
+                if (Objects.isNull(head))
                 {
                     // TODO: Handle the initial commit scenario
                     logger.info("Initial commit: No previous commits found.");
                 }
                 else
                 {
-                    var headTree  = prepareTreeParser( repository, head );
-                    var indexTree = prepareIndexTreeParser( repository );
-                    var stagedChanges = git.diff().setOldTree( headTree ).setNewTree( indexTree ).call();
+                    AbstractTreeIterator headTree  = prepareTreeParser(repository, head);
+                    AbstractTreeIterator indexTree = prepareIndexTreeParser(repository);
+                    List stagedChanges = git.diff().setOldTree(headTree).setNewTree(indexTree).call();
                     
-                    var patch = printChanges( git.getRepository(), stagedChanges );
+                    String patch = printChanges(git.getRepository(), stagedChanges);
                     
-                    var message = chatMessageFactory.createGenerateGitCommitCommentJob( patch );
-                    viewPresenter.onSendPredefinedPrompt( Prompts.GIT_COMMENT, message );
+                    ChatMessage message = chatMessageFactory.createGenerateGitCommitCommentJob(patch);
+                    viewPresenter.onSendPredefinedPrompt(Prompts.GIT_COMMENT, message);
                 }
                     
             }
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
         	logger.error(e, e.getMessage());
         }
     }
 
     // Helper method to prepare the tree parser
-    private static AbstractTreeIterator prepareTreeParser( Repository repository, ObjectId objectId ) throws IOException
+    private static AbstractTreeIterator prepareTreeParser(Repository repository, ObjectId objectId) throws IOException
     {
-        try (RevWalk walk = new RevWalk( repository ))
+        try (RevWalk walk = new RevWalk(repository))
         {
-            var commit = walk.parseCommit( objectId );
-            var treeId  = commit.getTree().getId();
+            RevCommit commit = walk.parseCommit(objectId);
+            ObjectId treeId  = commit.getTree().getId();
 
-            try ( var reader = repository.newObjectReader())
+            try (ObjectReader reader = repository.newObjectReader())
             {
-                return new CanonicalTreeParser( null, reader, treeId );
+                return new CanonicalTreeParser(null, reader, treeId);
             }
         }
     }
 
     // Helper method to prepare the index tree parser
-    private static AbstractTreeIterator prepareIndexTreeParser( Repository repository ) throws IOException
+    private static AbstractTreeIterator prepareIndexTreeParser(Repository repository) throws IOException
     {
-        try ( var inserter = repository.newObjectInserter(); 
-              var reader = repository.newObjectReader())
+        try (ObjectInserter inserter = repository.newObjectInserter(); 
+              ObjectReader reader = repository.newObjectReader())
         {
-            var treeId = repository.readDirCache().writeTree(inserter);
-            return new CanonicalTreeParser( null, reader, treeId );
+            ObjectId treeId = repository.readDirCache().writeTree(inserter);
+            return new CanonicalTreeParser(null, reader, treeId);
         }
     }
 
-    private String printChanges( Repository repository, List<DiffEntry> stagedChanges ) throws IOException
+    private String printChanges(Repository repository, List<DiffEntry> stagedChanges) throws IOException
     {
         
-        try (var out = new ByteArrayOutputStream(); 
-             var formatter = new DiffFormatter( out ))
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream(); 
+             DiffFormatter formatter = new DiffFormatter(out))
         {
-            formatter.setRepository( repository );
-            formatter.setDiffComparator( RawTextComparator.DEFAULT );
-            formatter.setDetectRenames( true );
+            formatter.setRepository(repository);
+            formatter.setDiffComparator(RawTextComparator.DEFAULT);
+            formatter.setDetectRenames(true);
             
-            for ( DiffEntry diff : stagedChanges )
+            for (DiffEntry diff : stagedChanges)
             {
                 // Print the patch to the output stream
-                formatter.format( diff );
+                formatter.format(diff);
             }
-            var patch = out.toString( "UTF-8" );
+            String patch = out.toString("UTF-8");
             return patch;
         }
     }

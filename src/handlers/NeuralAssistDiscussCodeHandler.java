@@ -6,6 +6,6 @@ public class NeuralAssistDiscussCodeHandler extends NeuralAssistHandlerTemplate
 {
     public NeuralAssistDiscussCodeHandler()
     {
-        super( Prompts.DISCUSS );
+        super(Prompts.DISCUSS);
     }
 }

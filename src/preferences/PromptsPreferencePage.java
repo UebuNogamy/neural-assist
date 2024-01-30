@@ -31,54 +31,54 @@ public class PromptsPreferencePage extends PreferencePage implements IWorkbenchP
     }
     
     @Override
-    public void init( IWorkbench workbench )
+    public void init(IWorkbench workbench)
     {
     }
 
     @Override
-    protected Control createContents( Composite parent )
+    protected Control createContents(Composite parent)
     {
         SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
         sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        list = new List( sashForm, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL );
+        list = new List(sashForm, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 
-        textArea = new Text( sashForm, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP );
-        var textAreaLayoutData = new GridData( GridData.FILL_BOTH );
-        textArea.setLayoutData( textAreaLayoutData );
+        textArea = new Text(sashForm, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+        GridData textAreaLayoutData = new GridData(GridData.FILL_BOTH);
+        textArea.setLayoutData(textAreaLayoutData);
 
         // Sets the initial weight ratio
         sashForm.setWeights(new int[]{15, 85}); 
         
         initializeListeners();
         
-        preferencePresenter.registerView( this );
+        preferencePresenter.registerView(this);
 
         return sashForm;
     }
 
     private void initializeListeners()
     {
-        list.addSelectionListener( new SelectionAdapter()
+        list.addSelectionListener(new SelectionAdapter()
         {
             @Override
-            public void widgetSelected( SelectionEvent e )
+            public void widgetSelected(SelectionEvent e)
             {
-                Objects.requireNonNull( preferencePresenter );
+                Objects.requireNonNull(preferencePresenter);
                 int selectedIndex = list.getSelectionIndex();
-                preferencePresenter.setSelectedPrompt( selectedIndex );
+                preferencePresenter.setSelectedPrompt(selectedIndex);
             }
-        } );
+        });
     }
 
-    public void setPrompts( String[] prompts )
+    public void setPrompts(String[] prompts)
     {
-        list.setItems( prompts );
+        list.setItems(prompts);
     }
 
-    public void setCurrentPrompt( String selectedItem )
+    public void setCurrentPrompt(String selectedItem)
     {
-        textArea.setText( selectedItem );
+        textArea.setText(selectedItem);
     }
     
     @Override

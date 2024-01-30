@@ -19,6 +19,7 @@ import org.eclipse.egit.core.Activator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import commands.FunctionExecutor;
 import commands.FunctionExecutorProvider;
 import model.ChatMessage;
 import model.Conversation;
@@ -43,67 +44,67 @@ public class ExecuteFunctionCallJob extends Job
     
     public ExecuteFunctionCallJob()
     {
-        super( NeuralAssistJobConstants.JOB_PREFIX + " execute function call");
+        super(NeuralAssistJobConstants.JOB_PREFIX + " execute function call");
         
     }
     
     @Override
-    protected IStatus run( IProgressMonitor monitor )
+    protected IStatus run(IProgressMonitor monitor)
     {
-        Objects.requireNonNull( functionCall );
+        Objects.requireNonNull(functionCall);
         
         try
         {
             // 1. execute the callback
-            var future = executeFunctionCall( functionCall );
+            CompletableFuture<IStatus> future = executeFunctionCall(functionCall);
             return future.get();
         }
-        catch ( InterruptedException | ExecutionException e )
+        catch (InterruptedException | ExecutionException e)
         {
             return new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e);
         }
     }
 
-    public void setFunctionCall( FunctionCall functionCall )
+    public void setFunctionCall(FunctionCall functionCall)
     {
         this.functionCall = functionCall;
     }
-    private CompletableFuture<IStatus> executeFunctionCall( FunctionCall functionCall )
+    private CompletableFuture<IStatus> executeFunctionCall(FunctionCall functionCall)
     {
     	logger.info("Executing function call: " + functionCall);
-        var functionExecutor = functionExecutorProvider.get();
-        return functionExecutor.call( functionCall.getName(), functionCall.getArguments() )
-        .exceptionally( th -> {
+        FunctionExecutor functionExecutor = functionExecutorProvider.get();
+        return functionExecutor.call(functionCall.getName(), functionCall.getArguments())
+        .exceptionally(th -> {
             Status status = new Status(IStatus.ERROR, Activator.getPluginId(), th.getMessage(), th);
         	logger.error(th, th.getMessage());
             return status; 
             })
-        .thenApply( result -> {
+        .thenApply(result -> {
             logger.info("Finished function call: " + functionCall);
-            ChatMessage resultMessage = new ChatMessage( UUID.randomUUID().toString(), functionCall.getName(), "function" );
+            ChatMessage resultMessage = new ChatMessage(UUID.randomUUID().toString(), functionCall.getName(), "function");
             String resultJson;
             try
             {
                 // 2. append function_call request to the conversation
-                ChatMessage message =  new ChatMessage( UUID.randomUUID().toString(), "assistant");
-                message.setFunctionCall( functionCall );
-                conversation.add( message );
+                ChatMessage message =  new ChatMessage(UUID.randomUUID().toString(), "assistant");
+                message.setFunctionCall(functionCall);
+                conversation.add(message);
                 // 3. append function_call result to the conversation
                 ObjectMapper mapper = new ObjectMapper();
-                resultJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString( result );
-                resultMessage.setContent( resultJson );
-                conversation.add( resultMessage );
+                resultJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result);
+                resultMessage.setContent(resultJson);
+                conversation.add(resultMessage);
                 // 4. and push the conversation to the LLM
                 SendConversationJob job = sendConversationJobProvider.get();
                 job.schedule();
                 return Status.OK_STATUS;
             }
-            catch ( JsonProcessingException e )
+            catch (JsonProcessingException e)
             {
             	Status status = new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e);
             	logger.error(e, e.getMessage());
                 return status; 
             }
-        } );
+        });
     }
 }

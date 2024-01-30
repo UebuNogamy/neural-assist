@@ -2,6 +2,7 @@ package prompt;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -9,6 +10,8 @@ import javax.inject.Singleton;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.e4.core.di.annotations.Creatable;
+
+import sun.misc.IOUtils;
 
 /**
  * A singleton class responsible for loading prompt text from resource files and applying substitutions.
@@ -26,12 +29,12 @@ public class PromptLoader
 	{
 	}
 	
-	public void setBaseURL( String baseURL )
+	public void setBaseURL(String baseURL)
 	{
 	    this.baseURL = baseURL;
 	}
 	
-	public String updatePromptText( String promptText, String... substitutions )
+	public String updatePromptText(String promptText, String... substitutions)
 	{
         if (substitutions.length % 2 != 0)
         {
@@ -47,22 +50,22 @@ public class PromptLoader
 	
     public String createPromptText(String resourceFile, String... substitutions) 
     {
-        var prompt = getRawPrompt( resourceFile );
-        prompt = updatePromptText( prompt, substitutions );
+        String prompt = getRawPrompt(resourceFile);
+        prompt = updatePromptText(prompt, substitutions);
         return prompt;
     }
 
-    public String getRawPrompt( String resourceFile )
+    public String getRawPrompt(String resourceFile)
     {
-        try (var in = FileLocator.toFileURL( new URL( new URL(baseURL), resourceFile )  ).openStream();
-             var dis = new DataInputStream(in);)
+        try (InputStream in = FileLocator.toFileURL(new URL(new URL(baseURL), resourceFile) ).openStream();
+             DataInputStream dis = new DataInputStream(in);)
         {
-            var prompt = new String(dis.readAllBytes(), StandardCharsets.UTF_8);
+            String prompt = new String(IOUtils.readAllBytes(dis), StandardCharsets.UTF_8);
             return prompt;
         }
-        catch ( IOException e )
+        catch (IOException e)
         {
-            throw new RuntimeException( e );
+            throw new RuntimeException(e);
         }        
     }
 

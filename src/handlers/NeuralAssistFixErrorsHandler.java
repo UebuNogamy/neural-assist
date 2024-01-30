@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -20,9 +21,12 @@ import org.eclipse.egit.core.Activator;
 import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import model.ChatMessage;
 import part.SaigaPresenter;
 import prompt.ChatMessageFactory;
 import prompt.Prompts;
@@ -37,22 +41,22 @@ public class NeuralAssistFixErrorsHandler
     private SaigaPresenter viewPresenter;
     
     @Execute
-    public void execute( @Named( IServiceConstants.ACTIVE_SHELL ) Shell s )
+    public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell s)
     {
-        var activeFile = "";
-        var filePath = "";
-        var ext = "";
-        var fileContents = "";
-        var errorMessages = "";
+        String activeFile = "";
+        String filePath = "";
+        String ext = "";
+        String fileContents = "";
+        String errorMessages = "";
         
-        var workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-        var projects = workspaceRoot.getProjects();
+        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        IProject[] projects = workspaceRoot.getProjects();
 
         // Get the active workbench window
-        var workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 
         // Get the active editor's input file
-        var activeEditor = workbenchWindow.getActivePage().getActiveEditor();
+        IEditorPart activeEditor = workbenchWindow.getActivePage().getActiveEditor();
         
         if (activeEditor instanceof ITextEditor)
         {
@@ -63,36 +67,36 @@ public class NeuralAssistFixErrorsHandler
             IFile file = (IFile) textEditor.getEditorInput().getAdapter(IFile.class);
             try  
             {
-                fileContents = new String( Files.readAllBytes( file.getLocation().toFile().toPath() ), StandardCharsets.UTF_8 );
+                fileContents = new String(Files.readAllBytes(file.getLocation().toFile().toPath()), StandardCharsets.UTF_8);
             } 
             catch (IOException e) 
             {
                 throw new RuntimeException(e);
             }
             filePath     = file.getProjectRelativePath().toString(); // use project relative path
-            ext          = activeFile.substring( activeFile.lastIndexOf( "." )+1 );
+            ext          = activeFile.substring(activeFile.lastIndexOf(".")+1);
         }
-        for ( IProject project : projects )
+        for (IProject project : projects)
         {
             try
             {
                 // Check if the project is open and has a Java nature
-                if ( project.isOpen() && project.hasNature( JavaCore.NATURE_ID ) )
+                if (project.isOpen() && project.hasNature(JavaCore.NATURE_ID))
                 {
                     // Get the markers for the project
-                    var markers = project.findMarkers( IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE );
+                    IMarker[] markers = project.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
 
                     // Iterate through the markers and access the compile errors
-                    for ( var marker : markers )
+                    for (IMarker marker : markers)
                     {
-                        int severity = marker.getAttribute( IMarker.SEVERITY, -1 );
+                        int severity = marker.getAttribute(IMarker.SEVERITY, -1);
 
-                        if ( severity == IMarker.SEVERITY_ERROR )
+                        if (severity == IMarker.SEVERITY_ERROR)
                         {
                             // This marker represents a compile error
-                            var errorMessage = marker.getAttribute( IMarker.MESSAGE, "" );
-                            var lineNumber = marker.getAttribute( IMarker.LINE_NUMBER, -1 );
-                            var fileName = marker.getResource().getName();
+                            String errorMessage = marker.getAttribute(IMarker.MESSAGE, "");
+                            int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, -1);
+                            String fileName = marker.getResource().getName();
                             // Check if the error is related to the active workbench
                             if (activeFile != null && activeFile.equals(fileName)) 
                             {
@@ -103,16 +107,16 @@ public class NeuralAssistFixErrorsHandler
                     }
                 }
             }
-            catch ( CoreException e )
+            catch (CoreException e)
             {
             	logger.error(e, e.getMessage());
             }
         }
-        if ( !errorMessages.isEmpty() )
+        if (!errorMessages.isEmpty())
         {
-            var context = new Context( filePath, fileContents, errorMessages, "", "", ext );
-            var message = chatMessageFactory.createUserChatMessage( Prompts.FIX_ERRORS, context );
-            viewPresenter.onSendPredefinedPrompt( Prompts.FIX_ERRORS, message );
+            Context context = new Context(filePath, fileContents, errorMessages, "", "", ext);
+            ChatMessage message = chatMessageFactory.createUserChatMessage(Prompts.FIX_ERRORS, context);
+            viewPresenter.onSendPredefinedPrompt(Prompts.FIX_ERRORS, message);
         }
     }
 }

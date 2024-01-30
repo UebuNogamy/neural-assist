@@ -13,6 +13,7 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
 
 import model.Conversation;
+import services.StreamJavaHttpClient;
 import subscribers.HttpClientProvider;
 
 @Creatable
@@ -29,23 +30,23 @@ public class SendConversationJob extends Job
     
     public SendConversationJob()
     {
-        super( NeuralAssistJobConstants.JOB_PREFIX + " ask Saiga for help");
+        super(NeuralAssistJobConstants.JOB_PREFIX + " ask Saiga for help");
         
     }
     @Override
     protected IStatus run(IProgressMonitor progressMonitor) 
     {
-        var client = clientProvider.get();
-        client.setCancelProvider( () -> progressMonitor.isCanceled() ); 
+        StreamJavaHttpClient client = clientProvider.get();
+        client.setCancelProvider(() -> progressMonitor.isCanceled()); 
         
         try 
         {
-            var future = CompletableFuture.runAsync( client.run(conversation) )
-                    .thenApply( v -> Status.OK_STATUS )
+            CompletableFuture<IStatus> future = CompletableFuture.runAsync(client.run(conversation))
+                    .thenApply(v -> Status.OK_STATUS)
                     .exceptionally(e -> new Status(IStatus.ERROR, Activator.getPluginId(), "Unable to run the task: " + e.getMessage(), e));
             return future.get();
         } 
-        catch ( Exception e ) 
+        catch (Exception e) 
         {
             return new Status(IStatus.ERROR, Activator.getPluginId(), e.getMessage(), e);
         }

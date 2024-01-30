@@ -12,9 +12,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 {
     public PreferencePage()
     {
-        super( GRID );
-        setPreferenceStore( Activator.getDefault().getPreferenceStore() );
-        setDescription( "API settings" );
+        super(GRID);
+        setPreferenceStore(Activator.getDefault().getPreferenceStore());
+        setDescription("API settings");
     }
 
     /**
@@ -26,8 +26,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
     {
         addField(new StringFieldEditor(PreferenceConstants.API_BASE, "&API Base:", getFieldEditorParent()));
         addField(new StringFieldEditor(PreferenceConstants.API_END_POINT, "&API End Point:", getFieldEditorParent()));
-//        addField( new StringFieldEditor( PreferenceConstants.API_KEY, "&API Key:", getFieldEditorParent() ) );
-//        addField( new StringFieldEditor( PreferenceConstants.MODEL_NAME, "&Model Name", getFieldEditorParent() ) );
+//        addField(new StringFieldEditor(PreferenceConstants.API_KEY, "&API Key:", getFieldEditorParent()));
+//        addField(new StringFieldEditor(PreferenceConstants.MODEL_NAME, "&Model Name", getFieldEditorParent()));
     }
 
     /*
@@ -36,7 +36,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
      * @see
      * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
-    public void init( IWorkbench workbench )
+    public void init(IWorkbench workbench)
     {
     }
 

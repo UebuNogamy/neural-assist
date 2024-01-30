@@ -56,29 +56,29 @@ public class SaigaPresenter
     @PostConstruct
     public void init()
     {
-        appendMessageToViewSubscriber.setPresenter( this );
+        appendMessageToViewSubscriber.setPresenter(this);
     }
     
     public void onClear()
     {
         onStop();
         conversation.clear();
-        partAccessor.findMessageView().ifPresent( SaigaViewPart::clearChatView );
+        partAccessor.findMessageView().ifPresent(SaigaViewPart::clearChatView);
     }
-    public void on( String text )
+    public void on(String text)
     {
         
     }
 
-    public void onSendUserMessage( String text )
+    public void onSendUserMessage(String text)
     {
         logger.info("Send user message");
-        ChatMessage message = chatMessageFactory.createUserChatMessage( () -> text );
-        conversation.add( message );
-        partAccessor.findMessageView().ifPresent( part -> { 
+        ChatMessage message = chatMessageFactory.createUserChatMessage(() -> text);
+        conversation.add(message);
+        partAccessor.findMessageView().ifPresent(part -> { 
             part.clearUserInput(); 
-            part.appendMessage( message.getId(), message.getRole() );
-            part.setMessageHtml( message.getId(), message.getContent() );
+            part.appendMessage(message.getId(), message.getRole());
+            part.setMessageHtml(message.getId(), message.getContent());
         });
         sendConversationJobProvider.get().schedule();
     }
@@ -90,16 +90,16 @@ public class SaigaPresenter
         conversation.add(message);
         partAccessor.findMessageView().ifPresent(messageView -> {
                 messageView.appendMessage(message.getId(), message.getRole());
-                messageView.setInputEnabled( false );
+                messageView.setInputEnabled(false);
             });
         return message;
     }
 
 
-    public void updateMessageFromAssistant( ChatMessage message )
+    public void updateMessageFromAssistant(ChatMessage message)
     {
         partAccessor.findMessageView().ifPresent(messageView -> {
-            messageView.setMessageHtml( message.getId(), message.getContent() );   
+            messageView.setMessageHtml(message.getId(), message.getContent());   
         });
     }
 
@@ -107,7 +107,7 @@ public class SaigaPresenter
     public void endMessageFromAssistant()
     {
         partAccessor.findMessageView().ifPresent(messageView -> {
-            messageView.setInputEnabled( true );
+            messageView.setInputEnabled(true);
         });
     }
     /**
@@ -115,13 +115,13 @@ public class SaigaPresenter
      */
     public void onStop()
     {
-        var jobs = jobManager.find( null );
-        Arrays.stream( jobs )
-              .filter( job -> job.getName().startsWith( NeuralAssistJobConstants.JOB_PREFIX ) )
-              .forEach( Job::cancel );
+        Job[] jobs = jobManager.find(null);
+        Arrays.stream(jobs)
+              .filter(job -> job.getName().startsWith(NeuralAssistJobConstants.JOB_PREFIX))
+              .forEach(Job::cancel);
         
         partAccessor.findMessageView().ifPresent(messageView -> {
-            messageView.setInputEnabled( true );
+            messageView.setInputEnabled(true);
         });
     }
     /**
@@ -129,28 +129,28 @@ public class SaigaPresenter
      *
      * @param codeBlock The code block to be copied to the clipboard.
      */
-    public void onCopyCode( String codeBlock )
+    public void onCopyCode(String codeBlock)
     {
-        var clipboard    = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-        var textTransfer = TextTransfer.getInstance();
+        Clipboard clipboard    = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+        TextTransfer textTransfer = TextTransfer.getInstance();
         clipboard.setContents(new Object[] { codeBlock }, new Transfer[] { textTransfer });
         clipboard.dispose();
     }
 
-    public void onApplyPatch( String codeBlock )
+    public void onApplyPatch(String codeBlock)
     {
-        applyPatchWizzardHelper.showApplyPatchWizardDialog( codeBlock, null );
+        applyPatchWizzardHelper.showApplyPatchWizardDialog(codeBlock, null);
         
     }
 
-    public void onSendPredefinedPrompt( Prompts type, ChatMessage message )
+    public void onSendPredefinedPrompt(Prompts type, ChatMessage message)
     {
-        conversation.add( message );
+        conversation.add(message);
         
         // update view
         partAccessor.findMessageView().ifPresent(messageView -> {
-            messageView.appendMessage( message.getId(), message.getRole() );
-            messageView.setMessageHtml( message.getId(), type.getDescription() );
+            messageView.appendMessage(message.getId(), message.getRole());
+            messageView.setMessageHtml(message.getId(), type.getDescription());
         });        
         
         // schedule message

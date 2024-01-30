@@ -27,7 +27,7 @@ public class AppendMessageToViewSubscriber implements Flow.Subscriber<Incoming>
     private ChatMessage message;
     private SaigaPresenter presenter;
     
-    public AppendMessageToViewSubscriber( )
+    public AppendMessageToViewSubscriber()
     {
     }
     
@@ -39,7 +39,7 @@ public class AppendMessageToViewSubscriber implements Flow.Subscriber<Incoming>
     @Override
     public void onSubscribe(Subscription subscription)
     {
-        Objects.requireNonNull( presenter );
+        Objects.requireNonNull(presenter);
         this.subscription = subscription;
         message = presenter.beginMessageFromAssistant();
         subscription.request(1);
@@ -48,11 +48,11 @@ public class AppendMessageToViewSubscriber implements Flow.Subscriber<Incoming>
     @Override
     public void onNext(Incoming item)
     {
-        Objects.requireNonNull( presenter );
-        Objects.requireNonNull( message );
-        Objects.requireNonNull( subscription );
+        Objects.requireNonNull(presenter);
+        Objects.requireNonNull(message);
+        Objects.requireNonNull(subscription);
         message.append(item.getPayload());
-        presenter.updateMessageFromAssistant( message );
+        presenter.updateMessageFromAssistant(message);
         subscription.request(1);
     }
 
@@ -66,7 +66,7 @@ public class AppendMessageToViewSubscriber implements Flow.Subscriber<Incoming>
     @Override
     public void onComplete()
     {
-        Objects.requireNonNull( presenter );
+        Objects.requireNonNull(presenter);
         message = null;
         subscription = null;
         presenter.endMessageFromAssistant();

@@ -6,6 +6,6 @@ public class NeuralAssistJavaDocHandler extends NeuralAssistHandlerTemplate
 {
     public NeuralAssistJavaDocHandler()
     {
-        super( Prompts.DOCUMENT );
+        super(Prompts.DOCUMENT);
     }
 }

@@ -25,7 +25,7 @@ public class Activator extends AbstractUIPlugin
     // rest of the class code goes here
     public PromptsPreferencePresenter getPromptsPreferncePresenter()
     {
-        PromptsPreferencePresenter presenter = new PromptsPreferencePresenter( getDefault().getPreferenceStore() );
+        PromptsPreferencePresenter presenter = new PromptsPreferencePresenter(getDefault().getPreferenceStore());
         return presenter;
     }
 }

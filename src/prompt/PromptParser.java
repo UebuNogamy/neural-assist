@@ -22,7 +22,7 @@ public class PromptParser
     
     private final String prompt;
     
-    public PromptParser( String prompt )
+    public PromptParser(String prompt)
     {
         this.prompt = prompt;
     }
@@ -34,40 +34,40 @@ public class PromptParser
      */
     public String parseToHtml()
     {
-        var out = new StringBuilder();
+        StringBuilder out = new StringBuilder();
         
-        try( var scanner = new Scanner(prompt) )
+        try(Scanner scanner = new Scanner(prompt))
         {
-            scanner.useDelimiter( "\n" );
-            var codeBlockPattern = Pattern.compile( "^```([aA-zZ]*)$" );
-            var functionCallPattern = Pattern.compile( "^\"function_call\".*" );
-            while ( scanner.hasNext() )
+            scanner.useDelimiter("\n");
+            Pattern codeBlockPattern = Pattern.compile("^```([aA-zZ]*)$");
+            Pattern functionCallPattern = Pattern.compile("^\"function_call\".*");
+            while (scanner.hasNext())
             {
-                var  line    = scanner.next();
-                var codeBlockMatcher = codeBlockPattern.matcher( line );
-                var functionBlockMatcher = functionCallPattern.matcher( line );
+                String line = scanner.next();
+                Matcher codeBlockMatcher = codeBlockPattern.matcher(line);
+                Matcher functionBlockMatcher = functionCallPattern.matcher(line);
                 
-                if ( codeBlockMatcher.find() )
+                if (codeBlockMatcher.find())
                 {
-                    var lang = codeBlockMatcher.group(1);
-                    handleCodeBlock( out, lang );
+                    String lang = codeBlockMatcher.group(1);
+                    handleCodeBlock(out, lang);
                 }
-                else if ( functionBlockMatcher.find() )
+                else if (functionBlockMatcher.find())
                 {
-                    handleFunctionCall( out, line );
+                    handleFunctionCall(out, line);
                 }
                 else
                 {
-                    handleNonCodeBlock( out, line, !scanner.hasNext() );
+                    handleNonCodeBlock(out, line, !scanner.hasNext());
                 }
             }
         }
         return out.toString();
     }
 
-    private void handleFunctionCall( StringBuilder out, String line )
+    private void handleFunctionCall(StringBuilder out, String line)
     {
-        if( (state & FUNCION_CALL_STATE) != FUNCION_CALL_STATE )
+        if((state & FUNCION_CALL_STATE) != FUNCION_CALL_STATE)
         {
             out.append("<div class='function-call'><details><summary>Function call</summary><pre>" + line);
             state ^= FUNCION_CALL_STATE;
@@ -75,58 +75,58 @@ public class PromptParser
         }
     }
 
-    private void handleNonCodeBlock( StringBuilder out,  String line, boolean lastLine )
+    private void handleNonCodeBlock(StringBuilder out,  String line, boolean lastLine)
     {
-        if ( (state & CODE_BLOCK_STATE) == CODE_BLOCK_STATE  )
+        if ((state & CODE_BLOCK_STATE) == CODE_BLOCK_STATE )
         {
             
-            out.append(  StringEscapeUtils.escapeHtml4(escapeBackSlashes(line)) );
+            out.append( StringEscapeUtils.escapeHtml4(escapeBackSlashes(line)));
         }
         else
         {
-            out.append( markdown( StringEscapeUtils.escapeHtml4(line) ) );
+            out.append(markdown(StringEscapeUtils.escapeHtml4(line)));
         }
         
-        if ( lastLine && (state & CODE_BLOCK_STATE) == CODE_BLOCK_STATE  ) // close opened code blocks
+        if (lastLine && (state & CODE_BLOCK_STATE) == CODE_BLOCK_STATE ) // close opened code blocks
         {
-        	out.append( "</code></pre>\n" );
+        	out.append("</code></pre>\n");
         }
-        if ( lastLine && (state & FUNCION_CALL_STATE) == FUNCION_CALL_STATE  ) // close opened code blocks
+        if (lastLine && (state & FUNCION_CALL_STATE) == FUNCION_CALL_STATE ) // close opened code blocks
         {
-            out.append( "</pre></div>\n" );
+            out.append("</pre></div>\n");
         }
-        else if ( (state & CODE_BLOCK_STATE) == CODE_BLOCK_STATE  )
+        else if ((state & CODE_BLOCK_STATE) == CODE_BLOCK_STATE )
         {
-                out.append( "\n" );
+                out.append("\n");
         }
         else
         {
-            out.append( "<br/>" );
+            out.append("<br/>");
         }
     }
 
-    private void handleCodeBlock( StringBuilder out, String lang )
+    private void handleCodeBlock(StringBuilder out, String lang)
     {
-        if( (state & CODE_BLOCK_STATE) != CODE_BLOCK_STATE )
+        if((state & CODE_BLOCK_STATE) != CODE_BLOCK_STATE)
         {
             String codeBlockId = UUID.randomUUID().toString();
             out.append("<input type=\"button\" onClick=\"eclipseCopyCode(document.getElementById('${codeBlockId}').innerText)\" value=\"Copy Code\" /><input type=\"${showApplyPatch}\" onClick=\"eclipseApplyPatch(document.getElementById('${codeBlockId}').innerText)\" value=\"ApplyPatch\"/><pre><code lang=\"${lang}\" id=\"${codeBlockId}\">"
-            		.replace( "${lang}", lang )
-            		.replace( "${codeBlockId}", codeBlockId )
-            		.replace( "${showApplyPatch}", "diff".equals(lang) ? "button" : "hidden" )
+            		.replace("${lang}", lang)
+            		.replace("${codeBlockId}", codeBlockId)
+            		.replace("${showApplyPatch}", "diff".equals(lang) ? "button" : "hidden")
             		);
             state ^= CODE_BLOCK_STATE;
         }
         else
         {
-            out.append( "</code></pre>\n" );
+            out.append("</code></pre>\n");
             state ^= CODE_BLOCK_STATE;
         }
     }
     
-    public static String escapeBackSlashes( String input )
+    public static String escapeBackSlashes(String input)
     {
-        input = input.replace( "\\", "\\\\" );
+        input = input.replace("\\", "\\\\");
         return input;
     }
     

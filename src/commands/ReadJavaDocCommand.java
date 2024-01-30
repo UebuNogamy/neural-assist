@@ -50,14 +50,14 @@ public class ReadJavaDocCommand
      * @param fullyQualifiedClassName The fully qualified name of the class to find the JavaDoc for.
      * @return The JavaDoc string if available; otherwise, a message indicating it is not available.
      */
-    public String getClassAttachedJavadoc( String fullyQualifiedClassName )
+    public String getClassAttachedJavadoc(String fullyQualifiedClassName)
     {
         return getAvailableJavaProjects().stream()
-                                          .map( project -> getAttachedJavadoc( fullyQualifiedClassName, project ) )
-                                          .filter( Objects::nonNull )
-                                          .filter( Predicate.not( String::isBlank ) )
+                                          .map(project -> getAttachedJavadoc(fullyQualifiedClassName, project))
+                                          .filter(Objects::nonNull)
+                                          .filter(string -> !string.isEmpty())
                                           .findAny()
-                                          .orElse( "JavaDoc is not available for " + fullyQualifiedClassName );
+                                          .orElse("JavaDoc is not available for " + fullyQualifiedClassName);
     }
     /**
      * Retrieves the source code attached to the specified class within the available Java projects.
@@ -67,14 +67,14 @@ public class ReadJavaDocCommand
      * @param fullyQualifiedClassName The fully qualified name of the class for which to find the source code.
      * @return The source code string if available; otherwise, a message indicating it is not available.
      */    
-    public String getClassAttachedSource( String fullyQualifiedClassName )
+    public String getClassAttachedSource(String fullyQualifiedClassName)
     {
         return getAvailableJavaProjects().stream()
-                                          .map( project -> getAttachedSource( fullyQualifiedClassName, project ) )
-                                          .filter( Objects::nonNull )
-                                          .filter( Predicate.not( String::isBlank ) )
+                                          .map(project -> getAttachedSource(fullyQualifiedClassName, project))
+                                          .filter(Objects::nonNull)
+                                          .filter(string -> !string.isEmpty())
                                           .findAny()
-                                          .orElse( "Source is not available for " + fullyQualifiedClassName );
+                                          .orElse("Source is not available for " + fullyQualifiedClassName);
     }
     /**
      * Retrieves a list of all available Java projects in the current workspace.
@@ -93,18 +93,18 @@ public class ReadJavaDocCommand
             IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 
             // Filter out the Java projects
-            for ( IProject project : projects )
+            for (IProject project : projects)
             {
-                if ( project.isOpen() && project.hasNature( JavaCore.NATURE_ID ) )
+                if (project.isOpen() && project.hasNature(JavaCore.NATURE_ID))
                 {
-                    IJavaProject javaProject = JavaCore.create( project );
-                    javaProjects.add( javaProject );
+                    IJavaProject javaProject = JavaCore.create(project);
+                    javaProjects.add(javaProject);
                 }
             }
         }
-        catch ( CoreException e )
+        catch (CoreException e)
         {
-            throw new RuntimeException( e );
+            throw new RuntimeException(e);
         }
 
         return javaProjects;
@@ -118,29 +118,29 @@ public class ReadJavaDocCommand
      * @param javaProject The Java project within which to search for the class.
      * @return A string containing the JavaDoc for the class and its children, or an empty string if not found.
      */
-    public String getAttachedJavadoc( String fullyQualifiedClassName, IJavaProject javaProject )
+    public String getAttachedJavadoc(String fullyQualifiedClassName, IJavaProject javaProject)
     {
         String javaDoc = "";
         try
         {
             IType type = javaProject.findType(fullyQualifiedClassName);
-            if ( Objects.nonNull( type ) )
+            if (Objects.nonNull(type))
             {
-                javaDoc += getMemberJavaDoc( (IMember) type );
+                javaDoc += getMemberJavaDoc((IMember) type);
                 
-                for ( IJavaElement child : type.getChildren() )
+                for (IJavaElement child : type.getChildren())
                 {
-                    javaDoc += getMemberJavaDoc( (IMember) child );
+                    javaDoc += getMemberJavaDoc((IMember) child);
                 }
             }
         }
-        catch ( JavaModelException e )
+        catch (JavaModelException e)
         {
         	logger.error(e, e.getMessage());
         }
         
-        var converter = FlexmarkHtmlConverter.builder().build();
-        String markdown = converter.convert( javaDoc );
+        FlexmarkHtmlConverter converter = FlexmarkHtmlConverter.builder().build();
+        String markdown = converter.convert(javaDoc);
         return markdown;
     }
     
@@ -155,24 +155,24 @@ public class ReadJavaDocCommand
      * @return A string containing the JavaDoc documentation, or an empty string if none is found.
      * @throws JavaModelException if an error occurs while retrieving the JavaDoc.
      */
-    private String getMemberJavaDoc(  IMember member ) throws JavaModelException
+    private String getMemberJavaDoc( IMember member) throws JavaModelException
     {
         String javaDoc = "";
-        String attachedJavaDoc = member.getAttachedJavadoc( null );
-        if ( attachedJavaDoc != null )
+        String attachedJavaDoc = member.getAttachedJavadoc(null);
+        if (attachedJavaDoc != null)
         {
             javaDoc += attachedJavaDoc;
         }
         else
         {
             ISourceRange range = member.getJavadocRange();
-            if ( range != null )
+            if (range != null)
             {
                 ICompilationUnit unit = member.getCompilationUnit();
-                if ( unit != null )
+                if (unit != null)
                 {
                     IBuffer buffer = unit.getBuffer();
-                    javaDoc += buffer.getText( range.getOffset(), range.getLength() ) + "\n";
+                    javaDoc += buffer.getText(range.getOffset(), range.getLength()) + "\n";
                 }
             }
         }
@@ -189,23 +189,23 @@ public class ReadJavaDocCommand
      * @param javaProject The Java project to which the class belongs.
      * @return The source code of the class, or a message indicating that the source is not available.
      */
-    public String getAttachedSource( String fullyQualifiedClassName, IJavaProject javaProject )
+    public String getAttachedSource(String fullyQualifiedClassName, IJavaProject javaProject)
     {
         try
         {
             // Find the type for the fully qualified class name
-            IType type = javaProject.findType( fullyQualifiedClassName );
-            if ( type == null )
+            IType type = javaProject.findType(fullyQualifiedClassName);
+            if (type == null)
             {
                 return null;      
             }
             // Get the attached Javadoc
             IResource resource = type.getCorrespondingResource();
-            if ( resource == null )
+            if (resource == null)
             {
                 resource = type.getResource();
             }
-            if ( resource == null )
+            if (resource == null)
             {
                 resource = type.getUnderlyingResource();
             }
@@ -222,7 +222,7 @@ public class ReadJavaDocCommand
                 return content;
             }
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
         	logger.error(e, e.getMessage());
             return null;

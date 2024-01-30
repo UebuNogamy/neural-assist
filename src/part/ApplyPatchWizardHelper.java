@@ -17,6 +17,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.egit.core.Activator;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -41,17 +45,17 @@ public class ApplyPatchWizardHelper
     public void showApplyPatchWizardDialog(String patch, String targetPath) {
         
         // Create an InputStream from the patch string
-        try ( var patchInputStream = new ByteArrayInputStream(patch.getBytes(StandardCharsets.UTF_8) ) )
+        try (ByteArrayInputStream patchInputStream = new ByteArrayInputStream(patch.getBytes(StandardCharsets.UTF_8)))
         {
             // Create an IStorage object to wrap the InputStream
-            var patchStorage = new PatchStorage( patch );
-            var window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-            var part = window.getActivePage().getActivePart();
+            PatchStorage patchStorage = new PatchStorage(patch);
+            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            IWorkbenchPart part = window.getActivePage().getActivePart();
             // TODO: for the moment assume the target is associated with the project of currently opened editor
             // which may not be true
-            var target = getProjectOfCurrentlyOpenedEditor();
+            IProject target = getProjectOfCurrentlyOpenedEditor();
             
-            ApplyPatchOperation operation = new ApplyPatchOperation( part, patchStorage, target, new CompareConfiguration() );
+            ApplyPatchOperation operation = new ApplyPatchOperation(part, patchStorage, target, new CompareConfiguration());
             // Create and open the WizardDialog
             operation.openWizard();
         } 
@@ -69,10 +73,10 @@ public class ApplyPatchWizardHelper
      */
     private IProject getProjectOfCurrentlyOpenedEditor() 
     {
-        var window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        var activePage = window.getActivePage();
-        var activeEditor = activePage.getActiveEditor();
-        if ( activeEditor instanceof ITextEditor )
+        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchPage activePage = window.getActivePage();
+        IEditorPart activeEditor = activePage.getActiveEditor();
+        if (activeEditor instanceof ITextEditor)
         {
             ITextEditor textEditor = (ITextEditor) activeEditor;
             IFile file = textEditor.getEditorInput().getAdapter(IFile.class);
@@ -92,7 +96,7 @@ public class ApplyPatchWizardHelper
             this.patch = patch;
         }
         @Override
-        public <T> T getAdapter( Class<T> arg0 )
+        public <T> T getAdapter(Class<T> arg0)
         {
             return null;
         }

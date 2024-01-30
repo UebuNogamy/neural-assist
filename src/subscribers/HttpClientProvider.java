@@ -25,9 +25,9 @@ public class HttpClientProvider
     public StreamJavaHttpClient get()
     {
         StreamJavaHttpClient client = clientProvider.get();
-        client.subscribe( printMessageSubscriber );
-        client.subscribe( appendMessageToViewSubscriber );
-        client.subscribe( functionCallSubscriber );
+        client.subscribe(printMessageSubscriber);
+        client.subscribe(appendMessageToViewSubscriber);
+        client.subscribe(functionCallSubscriber);
         return client;
     }
 }

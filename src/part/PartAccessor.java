@@ -34,8 +34,8 @@ public class PartAccessor
     	return modelService.findElements(application, MPart.class, EModelService.IN_ACTIVE_PERSPECTIVE, element -> element.getElementId().equalsIgnoreCase("neural-assist.partdescriptor.saigaview"))
 	    	.stream()
 	        .findFirst()
-	        .map( mpart -> mpart.getObject() )
-	        .map( SaigaViewPart.class::cast );
+	        .map(mpart -> mpart.getObject())
+	        .map(SaigaViewPart.class::cast);
     }
 
     

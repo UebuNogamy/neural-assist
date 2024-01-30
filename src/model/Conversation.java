@@ -36,8 +36,8 @@ public class Conversation
 
     public Optional<ChatMessage> removeLastMessage()
     {
-        ChatMessage removed = !conversation.isEmpty() ? conversation.remove( conversation.size() - 1 ) : null;
-        return Optional.ofNullable( removed );
+        ChatMessage removed = !conversation.isEmpty() ? conversation.remove(conversation.size() - 1) : null;
+        return Optional.ofNullable(removed);
         
     }
 }

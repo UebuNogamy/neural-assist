@@ -26,17 +26,17 @@ public class PrintToFileMessageSubscriber implements Flow.Subscriber<Incoming>
     
     private Path getFile()
     {
-        Path path = Paths.get( System.getProperty( "user.home" ), "assitai.log" );
+        Path path = Paths.get(System.getProperty("user.home"), "assitai.log");
         return path;
     }
     
-    private void write( String str )
+    private void write(String str)
     {
         try
         {
-            Files.writeString( getFile(), str, StandardOpenOption.CREATE, StandardOpenOption.APPEND );
+            Files.writeString(getFile(), str, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         }
-        catch ( IOException e )
+        catch (IOException e)
         {
         	logger.error(e, e.getMessage());
         }
@@ -47,13 +47,13 @@ public class PrintToFileMessageSubscriber implements Flow.Subscriber<Incoming>
     {
         logger.info("Opening a log file: " + getFile());
         this.subscription = subscription;
-        write( "\n>--- BEGIN MESSAGE ---\n" );
+        write("\n>--- BEGIN MESSAGE ---\n");
         subscription.request(1);
     }
     @Override
     public void onNext(Incoming item)
     {
-        write( item.getPayload() );
+        write(item.getPayload());
         subscription.request(1);
     }
 
@@ -65,7 +65,7 @@ public class PrintToFileMessageSubscriber implements Flow.Subscriber<Incoming>
     @Override
     public void onComplete()
     {
-        write( "\n--- END MESSAGE ---\n" );
+        write("\n--- END MESSAGE ---\n");
         subscription.request(1);
     }
 }

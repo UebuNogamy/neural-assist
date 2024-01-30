@@ -2,6 +2,7 @@
 package services;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -12,49 +13,50 @@ import java.util.Objects;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import commands.Function;
 import commands.FunctionExecutor;
 import commands.FunctionParam;
 
 public class AnnotationToJsonConverter
 {
-    public static JsonNode convertDeclaredFunctionsToJson( Method ... methods )
+    public static JsonNode convertDeclaredFunctionsToJson(Method ... methods)
     {
-        var functionDetailsList = new ArrayList<>();
+    	ArrayList<Function> functionDetailsList = new ArrayList<>();
         
-        for ( Method method : methods )
+        for (Method method : methods)
         {
-            var functionAnnotation = method.getAnnotation( commands.Function.class );
-            if ( functionAnnotation != null )
+            Function functionAnnotation = method.getAnnotation(Function.class);
+            if (functionAnnotation != null)
             {
-                var properties = new LinkedHashMap<String, Property>();
-                var required   = new ArrayList<String>();
+                LinkedHashMap<String, Property> properties = new LinkedHashMap<>();
+                ArrayList<String> required   = new ArrayList<>();
                 
-                for ( var param : method.getParameters() )
+                for (Parameter param : method.getParameters())
                 {
-                    FunctionParam functionParamAnnotation = param.getAnnotation( FunctionParam.class );
-                    if ( functionParamAnnotation != null )
+                    FunctionParam functionParamAnnotation = param.getAnnotation(FunctionParam.class);
+                    if (functionParamAnnotation != null)
                     {
-                        String name = FunctionExecutor.toParamName( param ); 
-                        properties.put( name, 
-                                        new Property( functionParamAnnotation.type(),
-                                                      functionParamAnnotation.description() ) 
-                                        );
-                        if ( functionParamAnnotation.required() )
+                        String name = FunctionExecutor.toParamName(param); 
+                        properties.put(name, 
+                                        new Property(functionParamAnnotation.type(),
+                                                      functionParamAnnotation.description()) 
+                                       );
+                        if (functionParamAnnotation.required())
                         {
-                            required.add( name );
+                            required.add(name);
                         }
                     }
                 }
                 
-                var parameters = new Parameters( functionAnnotation.type(), properties, required );
-                var name = FunctionExecutor.toFunctionName( method );
-                functionDetailsList.add( new Function( name, 
+                Parameters parameters = new Parameters(functionAnnotation.type(), properties, required);
+                String name = FunctionExecutor.toFunctionName(method);
+                functionDetailsList.add(new Function(name, 
                                                        functionAnnotation.description(), 
-                                                       parameters ) );
+                                                       parameters));
             }
         }
-        var objectMapper = new ObjectMapper();
-        return objectMapper.valueToTree( functionDetailsList );
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.valueToTree(functionDetailsList);
 
     }
 
@@ -72,9 +74,9 @@ public class AnnotationToJsonConverter
      *            annotated methods.
      * @return a {@link JsonNode} in API format
      */
-    public static JsonNode convertDeclaredFunctionsToJson( Class<?> clazz )
+    public static JsonNode convertDeclaredFunctionsToJson(Class<?> clazz)
     {
-        return convertDeclaredFunctionsToJson( clazz.getDeclaredMethods() );
+        return convertDeclaredFunctionsToJson(clazz.getDeclaredMethods());
     }
 
 }
