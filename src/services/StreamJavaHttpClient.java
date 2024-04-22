@@ -155,7 +155,7 @@ public class StreamJavaHttpClient
     		
     		String requestBody = getRequestBody(prompt);
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(configuration.getApiUrl()))
-                    .timeout( Duration.ofSeconds( configuration.getRequestTimoutSeconds() * 4 ) )
+                    .timeout( Duration.ofSeconds( configuration.getRequestTimoutSeconds() * 10 ) )
 //    				.header("Authorization", "Bearer " + configuration.getApiKey())
     				.header("Accept", "text/event-stream")
     				.header("Content-Type", "application/json")
